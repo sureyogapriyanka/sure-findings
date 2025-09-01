@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/sure-findings/static/css/main.5ac598ce.css",
+    "main.js": "/sure-findings/static/js/main.a25c17ce.js",
+    "static/js/453.637975f2.chunk.js": "/sure-findings/static/js/453.637975f2.chunk.js",
+    "index.html": "/sure-findings/index.html",
+    "main.5ac598ce.css.map": "/sure-findings/static/css/main.5ac598ce.css.map",
+    "main.a25c17ce.js.map": "/sure-findings/static/js/main.a25c17ce.js.map",
+    "453.637975f2.chunk.js.map": "/sure-findings/static/js/453.637975f2.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5ac598ce.css",
+    "static/js/main.a25c17ce.js"
+  ]
+}
