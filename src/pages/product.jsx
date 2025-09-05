@@ -117,7 +117,7 @@ const Product = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button>Return Home</Button>
           </Link>
         </div>
@@ -133,9 +133,9 @@ const Product = () => {
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* Breadcrumb */}
       <nav className="text-sm text-muted-foreground mb-4">
-        <Link href="/" className="hover:text-primary">Home</Link>
+        <Link href="/sure-findings/" className="hover:text-primary">Home</Link>
         <span className="mx-2">/</span>
-        <Link href={`/category/${product.category}`} className="hover:text-primary capitalize">
+        <Link href={`/sure-findings/category/${product.category}`} className="hover:text-primary capitalize">
           {product.category}
         </Link>
         <span className="mx-2">/</span>

@@ -66,7 +66,7 @@ const Checkout = () => {
 
   useEffect(() => {
     if (cartItems.length === 0) {
-      navigate('/cart');
+      navigate('/sure-findings/cart');
     }
   }, [cartItems, navigate]);
 
@@ -95,7 +95,7 @@ const Checkout = () => {
 
       const order = createOrder(orderData);
       clear();
-      navigate(`/orders?new=${order.id}`);
+      navigate(`/sure-findings/orders?new=${order.id}`);
     } catch (error) {
       console.error('Error placing order:', error);
     }

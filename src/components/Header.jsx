@@ -19,16 +19,16 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/sure-findings/search?q=${encodeURIComponent(searchQuery.trim())}`);
     }
   };
 
   const categories = [
-    { name: 'Electronics', path: '/category/electronics' },
-    { name: 'Fashion', path: '/category/fashion' },
-    { name: 'Books', path: '/category/books' },
-    { name: 'Home & Kitchen', path: '/category/home' },
-    { name: 'Beauty', path: '/category/beauty' }
+    { name: 'Electronics', path: '/sure-findings/category/electronics' },
+    { name: 'Fashion', path: '/sure-findings/category/fashion' },
+    { name: 'Books', path: '/sure-findings/category/books' },
+    { name: 'Home & Kitchen', path: '/sure-findings/category/home' },
+    { name: 'Beauty', path: '/sure-findings/category/beauty' }
   ];
 
   return (
@@ -45,7 +45,7 @@ const Header = () => {
         <div className="flex items-center justify-between drop-shadow-lg">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <Link href="/" className="text-2xl font-bold hover:text-[#febd69] transition-colors flex items-center rounded-lg px-2 py-1 shadow-sm" data-testid="logo-home">
+            <Link href="/sure-findings/" className="text-2xl font-bold hover:text-[#febd69] transition-colors flex items-center rounded-lg px-2 py-1 shadow-sm" data-testid="logo-home">
               <span className="text-white">Sure-Findings Store</span>
             </Link>
 
@@ -105,25 +105,25 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" data-testid="menu-profile">Your Account</Link>
+                  <Link href="/sure-findings/profile" data-testid="menu-profile">Your Account</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/orders" data-testid="menu-orders">Your Orders</Link>
+                  <Link href="/sure-findings/orders" data-testid="menu-orders">Your Orders</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
+                  <Link href="/sure-findings/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Orders */}
-            <Link href="/orders" className="cursor-pointer hover:text-[#febd69] px-2 py-1 rounded-lg shadow-sm border border-[#febd69]/20 transition-all" data-testid="orders-link">
+            <Link href="/sure-findings/orders" className="cursor-pointer hover:text-[#febd69] px-2 py-1 rounded-lg shadow-sm border border-[#febd69]/20 transition-all" data-testid="orders-link">
               <div className="text-xs">Returns</div>
               <div className="font-medium text-sm">& Orders</div>
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative cursor-pointer hover:text-[#febd69] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#febd69]/20 transition-all" data-testid="cart-link">
+            <Link href="/sure-findings/cart" className="relative cursor-pointer hover:text-[#febd69] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#febd69]/20 transition-all" data-testid="cart-link">
               <div className="relative">
                 <ShoppingCart className="h-6 w-6" />
                 <span className="absolute -top-2 -right-2 bg-[#febd69] text-[#131921] rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold shadow-md" data-testid="cart-count">

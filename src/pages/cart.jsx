@@ -56,7 +56,7 @@ const Cart = () => {
         <p className="text-muted-foreground mb-8">
           Looks like you haven't added any items to your cart yet.
         </p>
-        <Link href="/">
+        <Link href="/sure-findings/">
           <Button className="bg-amazon-orange hover:bg-orange-600 text-gray-800">
             Continue Shopping
           </Button>
@@ -168,7 +168,7 @@ const Cart = () => {
           
           {/* Continue Shopping */}
           <div className="text-center mt-6">
-            <Link href="/">
+            <Link href="/sure-findings/">
               <Button variant="outline">
                 ← Continue Shopping
               </Button>
@@ -215,7 +215,7 @@ const Cart = () => {
             </div>
             
             {/* Proceed to Checkout */}
-            <Link href="/checkout">
+            <Link href="/sure-findings/checkout">
               <Button 
                 className="w-full bg-amazon-orange hover:bg-orange-600 text-gray-800 font-semibold py-3 mb-3"
                 data-testid="proceed-checkout"

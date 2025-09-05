@@ -66,7 +66,7 @@ const ProductCard = ({ product, className = '' }) => {
 
   return (
     <div className={`product-card bg-card rounded-lg shadow-md overflow-hidden cursor-pointer border border-border hover:shadow-lg transition-all duration-200 hover:-translate-y-1 ${className}`}>
-      <Link href={`/product/${product.id}`}>
+      <Link href={`/sure-findings/product/${product.id}`}>
         <div className="relative">
           <img 
             src={product.images[0]} 

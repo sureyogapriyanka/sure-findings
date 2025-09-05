@@ -126,7 +126,7 @@ const Category = () => {
     <div className="max-w-7xl mx-auto px-4 py-6">
       {/* Breadcrumb */}
       <nav className="text-sm text-muted-foreground mb-4">
-        <Link href="/" className="hover:text-primary">Home</Link>
+        <Link href="/sure-findings/" className="hover:text-primary">Home</Link>
         <span className="mx-2">/</span>
         <span>{category.name}</span>
       </nav>

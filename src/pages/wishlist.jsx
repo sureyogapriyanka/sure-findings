@@ -65,7 +65,7 @@ const Wishlist = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Please sign in to view your wishlist</h1>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button>Go Home</Button>
           </Link>
         </div>
@@ -81,7 +81,7 @@ const Wishlist = () => {
         <p className="text-muted-foreground mb-8">
           Save items you love by clicking the heart icon on any product.
         </p>
-        <Link href="/">
+        <Link href="/sure-findings/">
           <Button className="bg-amazon-orange hover:bg-orange-600 text-gray-800">
             Continue Shopping
           </Button>
@@ -129,7 +129,7 @@ const Wishlist = () => {
           return (
             <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative">
-                <Link href={`/product/${product.id}`}>
+                <Link href={`/sure-findings/product/${product.id}`}>
                   <img 
                     src={product.images[0]} 
                     alt={product.name}
@@ -170,7 +170,7 @@ const Wishlist = () => {
               </div>
 
               <CardContent className="p-4">
-                <Link href={`/product/${product.id}`}>
+                <Link href={`/sure-findings/product/${product.id}`}>
                   <h3 className="font-semibold text-lg mb-2 line-clamp-2 hover:text-primary cursor-pointer" data-testid={`wishlist-item-name-${product.id}`}>
                     {product.name}
                   </h3>
@@ -257,7 +257,7 @@ const Wishlist = () => {
         <h2 className="text-2xl font-bold mb-6">You might also like</h2>
         <div className="text-muted-foreground text-center py-8">
           <p>Browse products to discover items you might want to add to your wish list.</p>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button variant="outline" className="mt-4">
               Continue Shopping
             </Button>

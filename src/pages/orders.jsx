@@ -153,7 +153,7 @@ const Orders = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Please sign in to view your orders</h1>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button>Go Home</Button>
           </Link>
         </div>
@@ -218,7 +218,7 @@ const Orders = () => {
             <p className="text-muted-foreground mb-8">
               {searchQuery ? 'Try adjusting your search terms' : 'You haven\'t placed any orders yet'}
             </p>
-            <Link href="/">
+            <Link href="/sure-findings/">
               <Button className="bg-Sure-Findings Store-orange hover:bg-orange-600 text-gray-800">
                 Start Shopping
               </Button>

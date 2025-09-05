@@ -15,7 +15,7 @@ export default function NotFound() {
             The page you are looking for does not exist. Please check the URL or return to the homepage.
             </p>
             <br />
-            <a href="/" className="text-Sure-Findings Store-orange hover:underline">
+            <a href="/sure-findings/" className="text-Sure-Findings Store-orange hover:underline">
               Return to Homepage
             </a>
             <br />
