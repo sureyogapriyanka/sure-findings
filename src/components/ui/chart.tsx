@@ -106,7 +106,7 @@ const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof RechartsPrimitive.Tooltip> &
     React.ComponentProps<"div"> & {
-      hideLabel?: boolean
+      hideLabel?: boolean;
       hideIndicator?: boolean
       indicator?: "line" | "dot" | "dashed"
       nameKey?: string
@@ -116,7 +116,7 @@ const ChartTooltipContent = React.forwardRef<
   (
     {
       active,
-      payload,
+      payload: _payload,
       className,
       indicator = "dot",
       hideLabel = false,
@@ -128,11 +128,12 @@ const ChartTooltipContent = React.forwardRef<
       color,
       nameKey,
       labelKey,
+      ...props
     },
     ref
   ) => {
     const { config } = useChart()
-
+    const payload = _payload as RechartsPrimitive.TooltipProps<any, any>["payload"] | undefined
     const tooltipLabel = React.useMemo(() => {
       if (hideLabel || !payload?.length) {
         return null
@@ -182,6 +183,7 @@ const ChartTooltipContent = React.forwardRef<
           "grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl",
           className
         )}
+        {...props}
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
