@@ -19,14 +19,14 @@ function Router() {
     <>
       <Header />
       <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/category/:categoryName" component={Category} />
-        <Route path="/product/:productId" component={Product} />
-        <Route path="/cart" component={Cart} />
-        <Route path="/checkout" component={Checkout} />
-        <Route path="/orders" component={Orders} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/wishlist" component={Wishlist} />
+        <Route path="/sure-findings/" component={Home} />
+        <Route path="/sure-findings/category/:categoryName" component={Category} />
+        <Route path="/sure-findings/product/:productId" component={Product} />
+        <Route path="/sure-findings/cart" component={Cart} />
+        <Route path="/sure-findings/checkout" component={Checkout} />
+        <Route path="/sure-findings/orders" component={Orders} />
+        <Route path="/sure-findings/profile" component={Profile} />
+        <Route path="/sure-findings/wishlist" component={Wishlist} />
         <Route component={NotFound} />
       </Switch>
     </>
