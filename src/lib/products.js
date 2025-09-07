@@ -491,7 +491,7 @@ export const PRODUCT_DATABASE = [
     rating: 4.7,
     reviewCount: 1432,
     images: [
-      'https://images.unsplash.com/photo-1544966503-7cc5ac882d5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'
+      'https://www.patagonia.com/dw/image/v2/bdjb_PRD/on/demandware.static/-/Library-Sites-PatagoniaShared/default/dw0243a6ed/category/nano-puff/f25_nanopuff-multi_link-campaign-nanopuff-84225_CUBL.jpg?q=85&sw=334&'
     ],
     features: [
       '700-fill power down insulation',
@@ -578,7 +578,7 @@ export const PRODUCT_DATABASE = [
     rating: 4.4,
     reviewCount: 876,
     images: [
-      'https://images.unsplash.com/photo-1601762285092-4ccad9bcfbc1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'
+      'https://assets.burberry.com/is/image/Burberryltd/97D9C523-4AEB-47B0-9711-FD9D7393B809?$BBY_V3_SL_1$&wid=1501&hei=1500'
     ],
     features: [
       '100% pure cashmere',
@@ -874,7 +874,7 @@ export const PRODUCT_DATABASE = [
     rating: 4.6,
     reviewCount: 3421,
     images: [
-      'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'
+      'https://cf-images.eu-west-1.prod.boltdns.net/v1/static/2310970329001/0b48ef00-558e-4d97-acd1-7c5188265620/ac84f3f5-cfe7-464e-a7f8-263398ae7bf0/1280x720/match/image.jpg'
     ],
     features: [
       'Laser dust detection',
@@ -916,7 +916,7 @@ export const PRODUCT_DATABASE = [
     rating: 4.5,
     reviewCount: 28765,
     images: [
-      'https://images.unsplash.com/photo-1556909219-f4e330c3c228?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMZYmn-Z9LCVh9iASy22ZzQrgBrzFg_N_oLg&s'
     ],
     features: [
       '10-in-1 functionality',
@@ -958,7 +958,7 @@ export const PRODUCT_DATABASE = [
     rating: 4.3,
     reviewCount: 8932,
     images: [
-      'https://images.unsplash.com/photo-1585237021653-d8c2ddc8892d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'
+      'https://cdn.mos.cms.futurecdn.net/RGLKxHLwsWXUrMfKseZwS.jpg'
     ],
     features: [
       'Large 8-quart capacity',
@@ -1000,7 +1000,7 @@ export const PRODUCT_DATABASE = [
     rating: 4.4,
     reviewCount: 1654,
     images: [
-      'https://images.unsplash.com/photo-1556909114-4f6e0ef5e4a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'
+      'https://u-mercari-images.mercdn.net/photos/m80882491269_1.jpg'
     ],
     features: [
       'Set of 3 different sizes',
@@ -1127,7 +1127,7 @@ export const PRODUCT_DATABASE = [
     rating: 4.4,
     reviewCount: 1876,
     images: [
-      'https://images.unsplash.com/photo-1581024372206-4571b69c3d6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600'
+      'https://theearthcollective.in/cdn/shop/products/CueCard1_3cd8d9be-705e-4dc1-a630-6fa32d7459c3_900x.png?v=1680082643'
     ],
     features: [
       'Complete hair care routine',

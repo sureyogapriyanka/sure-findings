@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { Trash2, Heart, ShoppingCart } from 'lucide-react';
 import { useCart } from '../hooks/useCart';
 // import { addToWishlist, removeFromCart as removeFromStorage } from '../lib/storage';
@@ -8,10 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Separator } from '../components/ui/separator';
 
 const Cart = () => {
-  const { 
-    getCartItems, 
-    updateQuantity, 
-    removeItem, 
+  const {
+    getCartItems,
+    updateQuantity,
+    removeItem,
     getCartSubtotal,
     getCartTax,
     getCartGrandTotal,
@@ -19,6 +19,7 @@ const Cart = () => {
   } = useCart();
 
   const cartItems = getCartItems();
+  const [, setLocation] = useLocation();
   const [savedItems, setSavedItems] = useState([]);
 
   const handleQuantityChange = (itemId, newQuantity) => {
@@ -68,7 +69,7 @@ const Cart = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2">
@@ -78,14 +79,14 @@ const Cart = () => {
                 <div className="flex items-start space-x-4">
                   {/* Product Image */}
                   <Link href={`/product/${item.product.id}`}>
-                    <img 
-                      src={item.product.images[0]} 
+                    <img
+                      src={item.product.images[0]}
                       alt={item.product.name}
                       className="w-24 h-24 object-cover rounded-md cursor-pointer"
                       data-testid={`cart-item-image-${item.id}`}
                     />
                   </Link>
-                  
+
                   {/* Product Details */}
                   <div className="flex-1">
                     <Link href={`/product/${item.product.id}`}>
@@ -93,7 +94,7 @@ const Cart = () => {
                         {item.product.name}
                       </h3>
                     </Link>
-                    
+
                     {/* Options */}
                     {item.options && Object.keys(item.options).length > 0 && (
                       <div className="text-sm text-muted-foreground mb-2">
@@ -104,10 +105,10 @@ const Cart = () => {
                         ))}
                       </div>
                     )}
-                    
+
                     {/* Quantity and Actions */}
                     <div className="flex items-center space-x-4 mb-3">
-                      <Select 
+                      <Select
                         value={item.quantity.toString()}
                         onValueChange={(value) => handleQuantityChange(item.id, value)}
                       >
@@ -122,9 +123,9 @@ const Cart = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      
-                      <Button 
-                        variant="ghost" 
+
+                      <Button
+                        variant="ghost"
                         size="sm"
                         onClick={() => handleRemoveItem(item.id)}
                         data-testid={`remove-item-${item.id}`}
@@ -132,9 +133,9 @@ const Cart = () => {
                         <Trash2 className="h-4 w-4 mr-1" />
                         Remove
                       </Button>
-                      
-                      <Button 
-                        variant="ghost" 
+
+                      <Button
+                        variant="ghost"
                         size="sm"
                         onClick={() => handleSaveForLater(item)}
                         data-testid={`save-later-${item.id}`}
@@ -143,13 +144,13 @@ const Cart = () => {
                         Save for later
                       </Button>
                     </div>
-                    
+
                     {/* Stock Status */}
                     <div className="text-green-600 text-sm">
                       <span>✓ In Stock</span>
                     </div>
                   </div>
-                  
+
                   {/* Price */}
                   <div className="text-right">
                     <div className="text-2xl font-bold text-primary" data-testid={`item-total-${item.id}`}>
@@ -165,7 +166,7 @@ const Cart = () => {
               </div>
             ))}
           </div>
-          
+
           {/* Continue Shopping */}
           <div className="text-center mt-6">
             <Link href="/sure-findings/">
@@ -175,12 +176,12 @@ const Cart = () => {
             </Link>
           </div>
         </div>
-        
+
         {/* Order Summary */}
         <div className="lg:col-span-1">
           <div className="bg-card rounded-lg shadow-sm border border-border p-6 sticky top-6">
             <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-            
+
             <div className="space-y-3 mb-4">
               <div className="flex justify-between">
                 <span>Items ({getCartItemCount()}):</span>
@@ -206,24 +207,23 @@ const Cart = () => {
                 </span>
               </div>
             </div>
-            
+
             {/* Free Shipping Notice */}
             <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
               <div className="text-green-700 text-sm">
                 ✓ Your order qualifies for FREE Shipping
               </div>
             </div>
-            
+
             {/* Proceed to Checkout */}
-            <Link href="/sure-findings/checkout">
-              <Button 
-                className="w-full bg-amazon-orange hover:bg-orange-600 text-gray-800 font-semibold py-3 mb-3"
-                data-testid="proceed-checkout"
-              >
-                Proceed to Checkout
-              </Button>
-            </Link>
-            
+            <Button
+              className="w-full bg-amazon-orange hover:bg-orange-600 text-gray-800 font-semibold py-3 mb-3"
+              data-testid="proceed-checkout"
+              onClick={() => setLocation('/sure-findings/checkout')}
+            >
+              Proceed to Checkout
+            </Button>
+
             {/* Payment Methods */}
             <div className="text-center text-sm text-muted-foreground">
               <div className="mb-2">We accept:</div>
@@ -236,7 +236,7 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Saved for Later */}
       {savedItems.length > 0 && (
         <div className="mt-12">
@@ -244,8 +244,8 @@ const Cart = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {savedItems.map((item) => (
               <div key={item.id} className="bg-card rounded-lg shadow-sm border border-border p-4">
-                <img 
-                  src={item.product.images[0]} 
+                <img
+                  src={item.product.images[0]}
                   alt={item.product.name}
                   className="w-full h-32 object-cover rounded-md mb-3"
                 />
@@ -254,14 +254,14 @@ const Cart = () => {
                   {formatPrice(item.product.price)}
                 </div>
                 <div className="space-y-2">
-                  <Button 
+                  <Button
                     className="w-full bg-amazon-orange hover:bg-orange-600 text-gray-800 font-medium text-sm"
                     onClick={() => handleMoveToCart(item)}
                   >
                     Move to Cart
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full text-sm"
                     onClick={() => setSavedItems(prev => prev.filter(i => i.id !== item.id))}
                   >
