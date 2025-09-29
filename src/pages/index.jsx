@@ -10,7 +10,7 @@ const Index = () => {
     // If user is already logged in, redirect to home
     useEffect(() => {
         if (user) {
-            navigate('/sure-findings/home');
+            navigate('/home');
         }
     }, [user, navigate]);
 
@@ -41,7 +41,7 @@ const Index = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-                    <Link href="/sure-findings/register">
+                    <Link href="/register">
                         <Button className="bg-[#FF9900] hover:bg-[#e68a00] text-[#131A22] px-10 py-4 text-lg font-bold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105 hover:shadow-xl border border-[#a88734]">
                             Register as New User
                         </Button>
@@ -52,7 +52,7 @@ const Index = () => {
                         <span className="relative px-4 bg-[#131A22] text-gray-300 text-lg">or</span>
                     </div>
 
-                    <Link href="/sure-findings/login">
+                    <Link href="/login">
                         <Button className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-[#131A22] px-10 py-4 text-lg font-bold rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105">
                             Sign In to Your Account
                         </Button>
