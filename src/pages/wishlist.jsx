@@ -138,7 +138,7 @@ const Wishlist = () => {
         <div className="text-center py-12">
           <h1 className="text-3xl font-bold mb-4 text-orange-800">Your Wishlist</h1>
           <p className="text-muted-foreground mb-8">Your wishlist is empty</p>
-          <Link href="/home">
+          <Link href="/sure-findings/home">
             <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
               Continue Shopping
             </Button>
@@ -219,7 +219,7 @@ const Wishlist = () => {
       )}
 
       <div className="mt-8 text-center">
-        <Link href="/home">
+        <Link href="/sure-findings/home">
           <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
             Continue Shopping
           </Button>

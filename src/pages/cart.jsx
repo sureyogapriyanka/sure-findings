@@ -32,7 +32,7 @@ const Cart = () => {
   const handleCheckout = async () => {
     try {
       // Redirect to checkout page for all cart items
-      setLocation('/checkout');
+      setLocation('/sure-findings/checkout');
     } catch (error) {
       toast({
         title: "Error Processing Checkout",
@@ -63,7 +63,7 @@ const Cart = () => {
 
       // Redirect to checkout page after a short delay
       setTimeout(() => {
-        setLocation('/checkout');
+        setLocation('/sure-findings/checkout');
       }, 1500);
     } catch (error) {
       toast({

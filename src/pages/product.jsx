@@ -70,7 +70,7 @@ const Product = () => {
 
   // Redirect to checkout if buyNow is triggered
   if (redirectToCheckout) {
-    return <Redirect to="/checkout" />;
+    return <Redirect to="/sure-findings/checkout" />;
   }
 
   const handleAddToCart = async () => {
@@ -125,7 +125,7 @@ const Product = () => {
 
       // Redirect to checkout page after a short delay
       setTimeout(() => {
-        setLocation('/checkout');
+        setLocation('/sure-findings/checkout');
       }, 1500);
     } catch (error) {
       toast({

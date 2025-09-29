@@ -212,10 +212,10 @@ const Tracking = () => {
                             return (
                                 <div key={step.id} className="relative flex items-start">
                                     <div className={`relative z-10 flex items-center justify-center w-8 h-8 rounded-full border-2 ${isCompleted
-                                            ? 'bg-orange-500 border-orange-500 text-white'
-                                            : isCurrent
-                                                ? 'bg-white border-orange-500 text-orange-500'
-                                                : 'bg-white border-gray-300 text-gray-400'
+                                        ? 'bg-orange-500 border-orange-500 text-white'
+                                        : isCurrent
+                                            ? 'bg-white border-orange-500 text-orange-500'
+                                            : 'bg-white border-gray-300 text-gray-400'
                                         }`}>
                                         {isCompleted ? (
                                             <CheckCircle className="h-5 w-5" />

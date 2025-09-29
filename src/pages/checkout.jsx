@@ -377,7 +377,7 @@ Transaction Details:
     <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
       <div className="mb-6">
         {!singleProduct && (
-          <Link href="/cart" className="inline-flex items-center text-orange-600 hover:text-orange-800">
+          <Link href="/sure-findings/cart" className="inline-flex items-center text-orange-600 hover:text-orange-800">
             <ChevronLeft className="h-4 w-4 mr-1" />
             Back to Cart
           </Link>

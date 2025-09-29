@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [react()],
-    base: './', // Use relative paths for GitHub Pages compatibility
+    base: '/sure-findings/', // Use subdirectory path for GitHub Pages
     server: {
         port: 3000,
         // Removed proxy configuration since we're using localStorage mock API

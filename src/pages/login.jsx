@@ -19,7 +19,7 @@ const Login = () => {
 
     // If user is already logged in, redirect to home
     if (user) {
-        return <Redirect to="/home" />;
+        return <Redirect to="/sure-findings/home" />;
     }
 
     const handleChange = (e) => {
@@ -57,7 +57,7 @@ const Login = () => {
             setTimeout(() => {
                 login({ username: formData.username }).then(() => {
                     // Redirect to home page
-                    navigate('/home');
+                    navigate('/sure-findings/home');
                 });
             }, 1500);
         } catch (err) {
@@ -174,7 +174,7 @@ const Login = () => {
                     <div className="mt-6 text-center">
                         <button
                             type="button"
-                            onClick={() => navigate('/register')}
+                            onClick={() => navigate('/sure-findings/register')}
                             className="text-[#131921] hover:text-[#febd69] font-medium transition-colors duration-300"
                         >
                             New customer? Create your account

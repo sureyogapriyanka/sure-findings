@@ -27,7 +27,7 @@ const Register = () => {
 
     // If user is already logged in, redirect to home
     if (user) {
-        return <Redirect to="/home" />;
+        return <Redirect to="/sure-findings/home" />;
     }
 
     const handleChange = (e) => {
@@ -70,7 +70,7 @@ const Register = () => {
             // Small delay to show the toast before redirecting
             setTimeout(() => {
                 // After successful registration, redirect to login page
-                navigate('/login');
+                navigate('/sure-findings/login');
             }, 1500);
         } catch (err) {
             setError(err.message || 'Registration failed');
@@ -257,7 +257,7 @@ const Register = () => {
                     <div className="mt-6 text-center">
                         <button
                             type="button"
-                            onClick={() => navigate('/login')}
+                            onClick={() => navigate('/sure-findings/login')}
                             className="text-[#131921] hover:text-[#febd69] font-medium transition-colors duration-300"
                         >
                             Already have an account? Sign in

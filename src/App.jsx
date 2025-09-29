@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useRouter } from "wouter";
 import { queryClient } from "./lib/queryClient.js";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "./components/ui/toaster.jsx";
@@ -29,7 +29,13 @@ import DebugProduct from "./pages/debug-product.jsx";
 import Tracking from "./pages/tracking.jsx";
 import NotFound from "./pages/not-found.jsx";
 
+// Set base path for GitHub Pages
+const basePath = '/sure-findings';
+
 function Router() {
+    // Configure wouter with base path
+    useRouter({ base: basePath });
+
     return (
         <>
             <Header />

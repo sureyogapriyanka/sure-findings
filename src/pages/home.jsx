@@ -233,7 +233,7 @@ const Home = () => {
             <h3 className="font-semibold mb-2 text-[#131A22] dark:text-white">Your Orders</h3>
             <p className="text-sm text-[#666666] dark:text-[#aaaaaa] mb-4">Track, return, or buy things again</p>
             <Button className="w-full bg-[#FF9900] hover:bg-[#e68a00] text-[#131A22] border-none" asChild>
-              <Link href="/orders">Go to Orders</Link>
+              <Link href="/sure-findings/orders">Go to Orders</Link>
             </Button>
           </div>
           <div className="bg-white dark:bg-[#232f3e] rounded-lg p-6 shadow-lg flex flex-col items-center text-center border border-[#dddddd] dark:border-[#333333] transform transition-all duration-300 hover:scale-105">
@@ -241,7 +241,7 @@ const Home = () => {
             <h3 className="font-semibold mb-2 text-[#131A22] dark:text-white">Payments & Gift Cards</h3>
             <p className="text-sm text-[#666666] dark:text-[#aaaaaa] mb-4">Manage payment methods and gift cards</p>
             <Button className="w-full bg-[#FF9900] hover:bg-[#e68a00] text-[#131A22] border-none" asChild>
-              <Link href="/profile#payment">Manage Payments</Link>
+              <Link href="/sure-findings/profile#payment">Manage Payments</Link>
             </Button>
           </div>
           <div className="bg-white dark:bg-[#232f3e] rounded-lg p-6 shadow-lg flex flex-col items-center text-center border border-[#dddddd] dark:border-[#333333] transform transition-all duration-300 hover:scale-105">
@@ -249,7 +249,7 @@ const Home = () => {
             <h3 className="font-semibold mb-2 text-[#131A22] dark:text-white">Account Settings</h3>
             <p className="text-sm text-[#666666] dark:text-[#aaaaaa] mb-4">Change your email, password, and more</p>
             <Button className="w-full bg-[#FF9900] hover:bg-[#e68a00] text-[#131A22] border-none" asChild>
-              <Link href="/profile">Account Settings</Link>
+              <Link href="/sure-findings/profile">Account Settings</Link>
             </Button>
           </div>
           <div className="bg-white dark:bg-[#232f3e] rounded-lg p-6 shadow-lg flex flex-col items-center text-center border border-[#dddddd] dark:border-[#333333] transform transition-all duration-300 hover:scale-105">

@@ -67,7 +67,7 @@ const ProductCard = ({ product }) => {
 
       // Redirect to checkout page after a short delay
       setTimeout(() => {
-        navigate('/checkout');
+        navigate('/sure-findings/checkout');
       }, 1500);
     } catch (error) {
       toast({

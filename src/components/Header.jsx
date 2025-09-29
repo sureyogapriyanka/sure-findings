@@ -31,15 +31,15 @@ const Header = () => {
       try {
         // Method 1: Use the hook method
         const count1 = getCartItemCount();
-        
+
         // Method 2: Direct localStorage access as fallback
         const storageData = JSON.parse(localStorage.getItem('ecommerce_app_data') || '{}');
         const count2 = storageData.cart ? storageData.cart.reduce((count, item) => count + (item.quantity || 0), 0) : 0;
-        
+
         // Method 3: Direct cart access
         const directCart = JSON.parse(localStorage.getItem('cart') || '[]');
         const count3 = directCart.reduce((count, item) => count + (item.quantity || 0), 0);
-        
+
         // Use the highest count to ensure accuracy
         const finalCount = Math.max(count1, count2, count3);
         setCartItemCount(finalCount);
@@ -56,20 +56,20 @@ const Header = () => {
         }
       }
     };
-    
+
     updateCartCount();
-    
+
     // Listen for storage changes (in case cart is updated in another tab)
     const handleStorageChange = () => {
       refreshCart();
       updateCartCount();
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
-    
+
     // Also update when the component mounts
     const interval = setInterval(updateCartCount, 1000);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
@@ -152,7 +152,7 @@ const Header = () => {
               <div>
                 <div className="text-xs text-gray-300"></div>
                 <div className="font-medium">
-      
+
                 </div>
               </div>
             </div>
@@ -240,28 +240,28 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56 bg-white text-[#131A22]">
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" data-testid="menu-profile">Your Account</Link>
+                  <Link href="/sure-findings/profile" data-testid="menu-profile">Your Account</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/orders" data-testid="menu-orders">Your Orders</Link>
+                  <Link href="/sure-findings/orders" data-testid="menu-orders">Your Orders</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
+                  <Link href="/sure-findings/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/upi-test" data-testid="menu-upi-test">UPI Test</Link>
+                  <Link href="/sure-findings/upi-test" data-testid="menu-upi-test">UPI Test</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Orders */}
-            <Link href="/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="orders-link">
-  
+            <Link href="/sure-findings/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="orders-link">
+
               <div className="font-medium text-sm">my Orders</div>
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="cart-link">
+            <Link href="/sure-findings/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="cart-link">
               <div className="relative">
                 <ShoppingCart className="h-6 w-6" />
                 <span className="absolute -top-2 -right-2 bg-[#e68a00] text-[#131A22] rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold shadow-md" data-testid="cart-count">
@@ -291,12 +291,12 @@ const Header = () => {
             <div className="flex flex-col space-y-4">
               {/* Mobile User Actions */}
               <div className="flex justify-between">
-                <Link href="/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
+                <Link href="/sure-findings/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
 
                   <div className="font-medium text-sm">& Orders</div>
                 </Link>
-                
-                <Link href="/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
+
+                <Link href="/sure-findings/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
                   <div className="relative mx-auto">
                     <ShoppingCart className="h-6 w-6 mx-auto" />
                     <span className="absolute -top-2 -right-2 bg-[#e68a00] text-[#131A22] rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold shadow-md" data-testid="cart-count">
@@ -320,16 +320,16 @@ const Header = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56 bg-white text-[#131A22]">
                     <DropdownMenuItem asChild>
-                      <Link href="/profile" data-testid="menu-profile">Your Account</Link>
+                      <Link href="/sure-findings/profile" data-testid="menu-profile">Your Account</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/orders" data-testid="menu-orders">Your Orders</Link>
+                      <Link href="/sure-findings/orders" data-testid="menu-orders">Your Orders</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
+                      <Link href="/sure-findings/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/upi-test" data-testid="menu-upi-test">UPI Test</Link>
+                      <Link href="/sure-findings/upi-test" data-testid="menu-upi-test">UPI Test</Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -368,7 +368,7 @@ const Header = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            
+
             {/* Navigation items - scrollable on mobile */}
             <div className="flex space-x-2 md:space-x-4 overflow-x-auto scrollbar-hide">
               {categories.slice(0, 8).map((category) => (
