@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
 
     // If user is not authenticated, redirect to login page
     if (!user) {
-        return <Redirect to="/sure-findings/login" />;
+        return <Redirect to="/login" />;
     }
 
     // If user is authenticated, render children

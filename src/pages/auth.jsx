@@ -32,7 +32,7 @@ const Auth = () => {
 
     // If user is already logged in, redirect to home
     if (user) {
-        return <Redirect to="/sure-findings/home" />;
+        return <Redirect to="/home" />;
     }
 
     const handleChange = (e) => {
@@ -47,7 +47,7 @@ const Auth = () => {
     const handleLogin = async (credentials) => {
         try {
             await login(credentials);
-            navigate('/sure-findings/home');
+            navigate('/home');
         } catch (err) {
             setError(err.message || 'Login failed');
         }
@@ -59,7 +59,7 @@ const Auth = () => {
 
         try {
             await register(userData);
-            navigate('/sure-findings/home');
+            navigate('/home');
         } catch (err) {
             setError(err.message || 'Registration failed');
             setLoading(false);

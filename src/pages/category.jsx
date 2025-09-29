@@ -7,8 +7,13 @@ import { ChevronLeft } from 'lucide-react';
 
 const Category = () => {
   const [location, setLocation] = useLocation();
-  const categoryPath = location.split('/')[3];
-  const category = CATEGORIES.find(cat => cat.id === categoryPath);
+  // Extract category ID from URL - it should be the 3rd segment in the path
+  // e.g., /sure-findings/category/294
+  const pathSegments = location.split('/');
+  const categoryId = pathSegments[3]; // This will be the category ID like '294'
+
+  // Find category by ID
+  const category = CATEGORIES.find(cat => cat.id === categoryId);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,6 +45,7 @@ const Category = () => {
       <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold mb-4">Category not found</h1>
+          <p className="text-muted-foreground mb-4">URL: {location}, Category ID: {categoryId}</p>
           <Link href="/">
             <Button variant="outline">
               <ChevronLeft className="h-4 w-4 mr-2" />

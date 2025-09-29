@@ -1,26 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Redirecting...</title>
-    <script type="text/javascript">
-      // For SPA routing, redirect to index.html to let React Router handle the route
-      (function () {
-        var l = window.location;
-        var baseUrl = l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") + "/sure-findings/";
 
-        // If we're already at the root of the app, let React Router handle it
-        if (l.pathname === "/sure-findings/" || l.pathname === "/sure-findings/index.html") {
-          // Do nothing, let the app load normally
-          return;
-        }
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting...</title>
+  <script type="text/javascript">
+    // For SPA routing, redirect to index.html to let React Router handle the route
+    (function () {
+      var l = window.location;
+      var baseUrl = l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "") + "/sure-findings/";
 
-        // Otherwise, redirect to the app root to let React Router handle the route
-        window.location.replace(baseUrl);
-      })();
-    </script>
-  </head>
-  <body>
-    <p>Redirecting to the correct page...</p>
-  </body>
+      // If we're already at the root of the app, let React Router handle it
+      if (l.pathname === "/sure-findings/" || l.pathname === "/sure-findings/index.html") {
+        // Do nothing, let the app load normally
+        return;
+      }
+
+      // Otherwise, redirect to the app root to let React Router handle the route
+      window.location.replace(baseUrl);
+    })();
+  </script>
+</head>
+
+<body>
+  <p>Redirecting to the correct page...</p>
+</body>
+
 </html>
