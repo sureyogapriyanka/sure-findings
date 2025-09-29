@@ -151,7 +151,7 @@ const Wishlist = () => {
               <Card key={item.id} className="bg-gradient-to-br from-white to-orange-50 border border-orange-200 hover:shadow-lg transition-shadow">
                 <CardHeader className="p-4">
                   <img
-                    src={item.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'}
+                    src={item.images?.[0] || 'https://placehold.co/300x300?text=No+Image'}
                     alt={item.name}
                     className="w-full h-48 object-contain rounded-md"
                   />
@@ -192,7 +192,7 @@ const Wishlist = () => {
                   <Card key={product.id} className="bg-gradient-to-br from-white to-orange-50 border border-orange-200 hover:shadow-lg transition-shadow">
                     <CardHeader className="p-4">
                       <img
-                        src={product.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'}
+                        src={product.images?.[0] || 'https://placehold.co/300x300?text=No+Image'}
                         alt={product.name}
                         className="w-full h-48 object-contain rounded-md"
                       />

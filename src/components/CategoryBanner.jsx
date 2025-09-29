@@ -10,7 +10,7 @@ const CategoryBanner = ({ category }) => {
             alt={category.name}
             className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
             onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';
+              e.target.src = 'https://placehold.co/300x300?text=No+Image';
             }}
           />
         </div>

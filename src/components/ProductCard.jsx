@@ -164,7 +164,7 @@ const ProductCard = ({ product }) => {
         <div className="block">
           <div className="relative">
             <img
-              src={imageError ? 'https://via.placeholder.com/300x300?text=No+Image' : product.images?.[0] || 'https://via.placeholder.com/300x300?text=No+Image'}
+              src={imageError ? 'https://placehold.co/300x300?text=No+Image' : product.images?.[0] || 'https://placehold.co/300x300?text=No+Image'}
               alt={product.name}
               className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
