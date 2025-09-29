@@ -28,7 +28,13 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host "✅ Build completed successfully" -ForegroundColor Green
 
-# 4. Move built files to docs/ folder for GitHub Pages
+# 4. Verify that dist folder exists
+if (-not (Test-Path -Path "dist")) {
+    Write-Host "❌ Dist folder was not created during build" -ForegroundColor Red
+    exit 1
+}
+
+# 5. Move built files to docs/ folder for GitHub Pages
 Write-Host "📂 Moving built files to docs/ folder..." -ForegroundColor Yellow
 if (-not (Test-Path -Path "docs")) {
     New-Item -ItemType Directory -Name "docs"
@@ -41,7 +47,7 @@ if (-not (Test-Path -Path "docs")) {
 Copy-Item -Path "dist/*" -Destination "docs/" -Recurse
 Write-Host "✅ Files moved to docs/ folder" -ForegroundColor Green
 
-# 5. Commit and push changes
+# 6. Commit and push changes
 Write-Host "💾 Committing and pushing changes..." -ForegroundColor Yellow
 git add .
 git commit -m "Deploy: Update GitHub Pages site $(Get-Date)"

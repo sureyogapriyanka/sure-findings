@@ -281,6 +281,11 @@ If you prefer to deploy manually, follow these steps:
 
 2. Create a `docs/` folder (if it doesn't exist) and copy all contents from the `dist/` folder to `docs/`:
    ```bash
+   # On Windows (PowerShell)
+   mkdir docs
+   cp -r dist/* docs/
+   
+   # On macOS/Linux
    mkdir docs
    cp -r dist/* docs/
    ```
@@ -309,3 +314,4 @@ Your site will be available at: `https://<username>.github.io/<repository-name>/
 - The deployment script assumes your default branch is named `main`
 - GitHub Pages will automatically rebuild and deploy your site whenever you push changes to the `docs/` folder
 - Remember to always run the build process before deploying to ensure your latest changes are included
+- The PowerShell script has been tested and works correctly with this project setup
