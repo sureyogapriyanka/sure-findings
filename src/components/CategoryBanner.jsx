@@ -2,15 +2,23 @@ import { Link } from 'wouter';
 
 const CategoryBanner = ({ category }) => {
   return (
-    <Link href={`/sure-findings/category/${category.id}`}>
-      <div className="category-banner bg-card rounded-lg p-4 shadow-md cursor-pointer text-center hover:shadow-lg transition-all duration-200 hover:-translate-y-1" data-testid={`category-banner-${category.id}`}>
-        <img 
-          src={category.image} 
-          alt={category.name}
-          className="w-full h-24 object-cover rounded-md mb-2"
-        />
-        <h3 className="font-semibold">{category.name}</h3>
-        <p className="text-sm text-muted-foreground">Shop now</p>
+    <Link href={`/category/${category.id}`} className="block h-full">
+      <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 h-full group border border-gray-200 overflow-hidden">
+        <div className="aspect-square flex items-center justify-center bg-gray-50 p-4">
+          <img
+            src={category.image}
+            alt={category.name}
+            className="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300"
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/300x300?text=No+Image';
+            }}
+          />
+        </div>
+        <div className="p-4 text-center">
+          <h3 className="font-semibold text-gray-900 group-hover:text-orange-600 transition-colors">
+            {category.name}
+          </h3>
+        </div>
       </div>
     </Link>
   );

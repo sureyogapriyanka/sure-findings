@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search Test</title>
+</head>
+
+<body>
+    <h1>Search Test</h1>
+    <input type="text" id="searchInput" placeholder="Enter search term">
+    <button onclick="performSearch()">Search</button>
+    <div id="results"></div>
+
+    <script>
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) return;
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/products?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                document.getElementById('results').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('results').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+
+</html>

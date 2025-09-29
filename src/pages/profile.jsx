@@ -1,125 +1,178 @@
-import { useState } from 'react';
-import { User, MapPin, CreditCard, Shield, Bell, Edit, Plus, Trash2 } from 'lucide-react';
-import { useAuth } from '../hooks/useAuth';
-import { addAddress,  deleteAddress } from '../lib/storage';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Switch } from '../components/ui/switch';
-import { Separator } from '../components/ui/separator';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
+import { useState, useEffect } from 'react';
+import { Link } from 'wouter';
+import { Button } from '../components/ui/button.jsx';
+import { Input } from '../components/ui/input.jsx';
+import { Label } from '../components/ui/label.jsx';
+import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card.jsx';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs.jsx';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog.jsx';
+import { Plus, Edit, MapPin, User, CreditCard } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth.js';
 
 const Profile = () => {
-  const { user, updateUser } = useAuth();
-  const [activeTab, setActiveTab] = useState('personal');
-  // const [editingAddress, setEditingAddress] = useState(null);
+  const { user: authUser } = useAuth();
+  const [user, setUser] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+
+  const [addresses, setAddresses] = useState([
+    // Initialize with empty array, will load from storage or API
+  ]);
+
+  const [paymentMethods, setPaymentMethods] = useState([
+    // Initialize with empty array
+  ]);
+
+  const [personalInfo, setPersonalInfo] = useState({
+    name: '',
+    email: '',
+    phone: ''
+  });
+
   const [newAddress, setNewAddress] = useState({
-    type: 'Home',
     name: '',
     street: '',
     city: '',
     state: '',
-    zip: '',
-    country: 'United States',
+    zipCode: '',
+    country: 'India',
     isDefault: false
   });
-  const [personalInfo, setPersonalInfo] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    phone: user?.phone || ''
-  });
+
+  const [editingAddress, setEditingAddress] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Initialize user data from auth context
+  useEffect(() => {
+    if (authUser) {
+      const userData = {
+        name: authUser.username || '',
+        email: authUser.email || '',
+        phone: ''
+      };
+      setUser(userData);
+      setPersonalInfo(userData);
+    }
+  }, [authUser]);
 
   const handlePersonalInfoUpdate = () => {
-    updateUser(personalInfo);
+    // In a real app, this would save to a database
+    setUser({
+      ...user,
+      ...personalInfo
+    });
+    alert('Personal information updated successfully!');
   };
 
-  const handleAddAddress = () => {
-    addAddress({ ...newAddress, name: personalInfo.name });
+  const handleAddressSubmit = (e) => {
+    e.preventDefault();
+    if (editingAddress) {
+      // Update existing address
+      setAddresses(addresses.map(addr =>
+        addr.id === editingAddress.id ? { ...newAddress, id: editingAddress.id } : addr
+      ));
+      setEditingAddress(null);
+    } else {
+      // Add new address
+      setAddresses([...addresses, { ...newAddress, id: Date.now().toString() }]);
+    }
     setNewAddress({
-      type: 'Home',
       name: '',
       street: '',
       city: '',
       state: '',
-      zip: '',
-      country: 'United States',
+      zipCode: '',
+      country: 'India',
       isDefault: false
     });
   };
 
-
-  const handleDeleteAddress = (addressId) => {
-    deleteAddress(addressId);
+  const handleEditAddress = (address) => {
+    setEditingAddress(address);
+    setNewAddress({
+      name: address.name,
+      street: address.street,
+      city: address.city,
+      state: address.state,
+      zipCode: address.zipCode,
+      country: address.country || 'India',
+      isDefault: address.isDefault || false
+    });
   };
 
-  if (!user) {
+  const handleDeleteAddress = (addressId) => {
+    setAddresses(addresses.filter(addr => addr.id !== addressId));
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Loading profile...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authUser) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Please sign in to view your profile</h1>
+          <Link href="/sure-findings/login">
+            <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+              Go to Login
+            </Button>
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Your Account</h1>
-      
+    <div className="max-w-7xl mx-auto px-4 py-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl min-h-screen">
+      <h1 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-orange-800 via-orange-600 to-orange-800 bg-clip-text text-transparent">Your Account</h1>
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar */}
         <div className="lg:col-span-1">
           <Card>
             <CardContent className="p-6">
               <div className="text-center mb-6">
-                <div className="w-24 h-24 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-3">
-                  {user.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                <div className="w-24 h-24 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-3">
+                  {user.name?.split(' ').map(n => n[0]).join('') || authUser.username?.[0] || 'U'}
                 </div>
-                <h2 className="font-semibold text-lg" data-testid="profile-name">{user.name}</h2>
-                <p className="text-muted-foreground text-sm" data-testid="profile-email">{user.email}</p>
+                <h2 className="font-semibold text-lg">{user.name || authUser.username}</h2>
+                <p className="text-muted-foreground text-sm">{user.email || authUser.email}</p>
               </div>
-              
-              <Tabs value={activeTab} onValueChange={setActiveTab} orientation="vertical" className="w-full">
-                <TabsList className="grid w-full grid-cols-1 h-auto">
-                  <TabsTrigger value="personal" className="flex items-center justify-start w-full p-3" data-testid="tab-personal">
-                    <User className="h-4 w-4 mr-2" />
-                    Personal Information
-                  </TabsTrigger>
-                  <TabsTrigger value="addresses" className="flex items-center justify-start w-full p-3" data-testid="tab-addresses">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    Addresses
-                  </TabsTrigger>
-                  <TabsTrigger value="payment" className="flex items-center justify-start w-full p-3" data-testid="tab-payment">
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Payment Methods
-                  </TabsTrigger>
-                  <TabsTrigger value="security" className="flex items-center justify-start w-full p-3" data-testid="tab-security">
-                    <Shield className="h-4 w-4 mr-2" />
-                    Security
-                  </TabsTrigger>
-                  <TabsTrigger value="notifications" className="flex items-center justify-start w-full p-3" data-testid="tab-notifications">
-                    <Bell className="h-4 w-4 mr-2" />
-                    Notifications
-                  </TabsTrigger>
+
+              <Tabs defaultValue="personal" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="personal">Personal</TabsTrigger>
+                  <TabsTrigger value="addresses">Addresses</TabsTrigger>
+                  <TabsTrigger value="payment">Payment</TabsTrigger>
+                  <TabsTrigger value="orders">Orders</TabsTrigger>
                 </TabsList>
               </Tabs>
             </CardContent>
           </Card>
         </div>
-        
+
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            {/* Personal Information Tab */}
+          <Tabs defaultValue="personal">
+            {/* Personal Info Tab */}
             <TabsContent value="personal">
               <Card>
                 <CardHeader>
-                  <CardTitle>Personal Information</CardTitle>
+                  <CardTitle className="flex items-center">
+                    <User className="h-5 w-5 mr-2 text-orange-600" />
+                    Personal Information
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
+                <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="name">Full Name</Label>
@@ -127,7 +180,6 @@ const Profile = () => {
                         id="name"
                         value={personalInfo.name}
                         onChange={(e) => setPersonalInfo(prev => ({ ...prev, name: e.target.value }))}
-                        data-testid="input-name"
                       />
                     </div>
                     <div>
@@ -137,7 +189,6 @@ const Profile = () => {
                         type="email"
                         value={personalInfo.email}
                         onChange={(e) => setPersonalInfo(prev => ({ ...prev, email: e.target.value }))}
-                        data-testid="input-email"
                       />
                     </div>
                     <div>
@@ -147,11 +198,10 @@ const Profile = () => {
                         type="tel"
                         value={personalInfo.phone}
                         onChange={(e) => setPersonalInfo(prev => ({ ...prev, phone: e.target.value }))}
-                        data-testid="input-phone"
                       />
                     </div>
                   </div>
-                  <Button onClick={handlePersonalInfoUpdate} data-testid="save-personal-info">
+                  <Button onClick={handlePersonalInfoUpdate} className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
                     Save Changes
                   </Button>
                 </CardContent>
@@ -163,160 +213,138 @@ const Profile = () => {
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle>Your Addresses</CardTitle>
+                    <CardTitle className="flex items-center">
+                      <MapPin className="h-5 w-5 mr-2 text-orange-600" />
+                      Your Addresses
+                    </CardTitle>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button data-testid="add-address-button">
+                        <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
                           <Plus className="h-4 w-4 mr-2" />
                           Add Address
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Add New Address</DialogTitle>
+                          <DialogTitle>{editingAddress ? 'Edit Address' : 'Add New Address'}</DialogTitle>
                         </DialogHeader>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <form onSubmit={handleAddressSubmit} className="space-y-4">
                           <div>
-                            <Label htmlFor="addressType">Address Type</Label>
-                            <Select
-                              value={newAddress.type}
-                              onValueChange={(value) => setNewAddress(prev => ({ ...prev, type: value }))}
-                            >
-                              <SelectTrigger data-testid="address-type">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="Home">Home</SelectItem>
-                                <SelectItem value="Work">Work</SelectItem>
-                                <SelectItem value="Other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label htmlFor="addressName">Full Name</Label>
+                            <Label htmlFor="name">Full Name</Label>
                             <Input
-                              id="addressName"
+                              id="name"
                               value={newAddress.name}
                               onChange={(e) => setNewAddress(prev => ({ ...prev, name: e.target.value }))}
-                              data-testid="address-name"
+                              required
                             />
                           </div>
-                          <div className="md:col-span-2">
+                          <div>
                             <Label htmlFor="street">Street Address</Label>
                             <Input
                               id="street"
                               value={newAddress.street}
                               onChange={(e) => setNewAddress(prev => ({ ...prev, street: e.target.value }))}
-                              data-testid="address-street"
+                              required
                             />
                           </div>
-                          <div>
-                            <Label htmlFor="city">City</Label>
-                            <Input
-                              id="city"
-                              value={newAddress.city}
-                              onChange={(e) => setNewAddress(prev => ({ ...prev, city: e.target.value }))}
-                              data-testid="address-city"
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label htmlFor="city">City</Label>
+                              <Input
+                                id="city"
+                                value={newAddress.city}
+                                onChange={(e) => setNewAddress(prev => ({ ...prev, city: e.target.value }))}
+                                required
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="state">State</Label>
+                              <Input
+                                id="state"
+                                value={newAddress.state}
+                                onChange={(e) => setNewAddress(prev => ({ ...prev, state: e.target.value }))}
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label htmlFor="zipCode">ZIP Code</Label>
+                              <Input
+                                id="zipCode"
+                                value={newAddress.zipCode}
+                                onChange={(e) => setNewAddress(prev => ({ ...prev, zipCode: e.target.value }))}
+                                required
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="country">Country</Label>
+                              <Input
+                                id="country"
+                                value={newAddress.country}
+                                onChange={(e) => setNewAddress(prev => ({ ...prev, country: e.target.value }))}
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id="isDefault"
+                              checked={newAddress.isDefault}
+                              onChange={(e) => setNewAddress(prev => ({ ...prev, isDefault: e.target.checked }))}
                             />
+                            <Label htmlFor="isDefault">Set as default address</Label>
                           </div>
-                          <div>
-                            <Label htmlFor="state">State</Label>
-                            <Select
-                              value={newAddress.state}
-                              onValueChange={(value) => setNewAddress(prev => ({ ...prev, state: value }))}
-                            >
-                              <SelectTrigger data-testid="address-state">
-                                <SelectValue placeholder="Select State" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="NY">New York</SelectItem>
-                                <SelectItem value="CA">California</SelectItem>
-                                <SelectItem value="TX">Texas</SelectItem>
-                                <SelectItem value="FL">Florida</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label htmlFor="zip">ZIP Code</Label>
-                            <Input
-                              id="zip"
-                              value={newAddress.zip}
-                              onChange={(e) => setNewAddress(prev => ({ ...prev, zip: e.target.value }))}
-                              data-testid="address-zip"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="country">Country</Label>
-                            <Select
-                              value={newAddress.country}
-                              onValueChange={(value) => setNewAddress(prev => ({ ...prev, country: value }))}
-                            >
-                              <SelectTrigger data-testid="address-country">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="United States">United States</SelectItem>
-                                <SelectItem value="Canada">Canada</SelectItem>
-                                <SelectItem value="United Kingdom">United Kingdom</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                        <Button onClick={handleAddAddress} className="w-full mt-4" data-testid="save-address">
-                          Save Address
-                        </Button>
+                          <Button type="submit" className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+                            {editingAddress ? 'Update Address' : 'Add Address'}
+                          </Button>
+                        </form>
                       </DialogContent>
                     </Dialog>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {user.addresses?.map((address) => (
-                    <div key={address.id} className="border rounded-lg p-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="font-semibold">{address.type}</span>
-                            {address.isDefault && (
-                              <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
-                                Default
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-sm text-muted-foreground">
-                            {address.name}<br />
-                            {address.street}<br />
-                            {address.city}, {address.state} {address.zip}<br />
-                            {address.country}
-                          </div>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            data-testid={`edit-address-${address.id}`}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => handleDeleteAddress(address.id)}
-                            data-testid={`delete-address-${address.id}`}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {(!user.addresses || user.addresses.length === 0) && (
-                    <div className="text-center py-8">
-                      <MapPin className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                      <h3 className="font-medium mb-2">No addresses saved</h3>
-                      <p className="text-muted-foreground text-sm">
-                        Add an address to make checkout faster
-                      </p>
+                <CardContent>
+                  {addresses.length === 0 ? (
+                    <p className="text-muted-foreground">No addresses saved yet.</p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {addresses.map((address) => (
+                        <Card key={address.id} className="bg-gradient-to-br from-orange-50 to-white border border-orange-200">
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h3 className="font-semibold">{address.name}</h3>
+                              {address.isDefault && (
+                                <span className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs px-2 py-1 rounded">
+                                  Default
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground mb-1">{address.street}</p>
+                            <p className="text-sm text-muted-foreground mb-1">{address.city}, {address.state} {address.zipCode}</p>
+                            <p className="text-sm text-muted-foreground mb-3">{address.country}</p>
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditAddress(address)}
+                                className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                              >
+                                <Edit className="h-4 w-4 mr-1" />
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleDeleteAddress(address.id)}
+                                className="border-red-300 text-red-700 hover:bg-red-50"
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   )}
                 </CardContent>
@@ -328,176 +356,73 @@ const Profile = () => {
               <Card>
                 <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle>Payment Methods</CardTitle>
-                    <Button data-testid="add-payment-button">
+                    <CardTitle className="flex items-center">
+                      <CreditCard className="h-5 w-5 mr-2 text-orange-600" />
+                      Payment Methods
+                    </CardTitle>
+                    <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
                       <Plus className="h-4 w-4 mr-2" />
                       Add Payment Method
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {user.paymentMethods?.map((method) => (
-                    <div key={method.id} className="border rounded-lg p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <div className="text-2xl">💳</div>
-                          <div>
-                            <div className="font-semibold">
-                              •••• •••• •••• {method.last4}
+                <CardContent>
+                  {paymentMethods.length === 0 ? (
+                    <p className="text-muted-foreground">No payment methods saved yet.</p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {paymentMethods.map((payment) => (
+                        <Card key={payment.id} className="bg-gradient-to-br from-orange-50 to-white border border-orange-200">
+                          <CardContent className="p-4">
+                            <div className="flex justify-between items-start mb-2">
+                              <h3 className="font-semibold">{payment.type}</h3>
                             </div>
-                            <div className="text-sm text-muted-foreground">
-                              Expires {method.expiryMonth}/{method.expiryYear}
+                            <p className="text-sm text-muted-foreground mb-1">{payment.name}</p>
+                            {payment.expiry && (
+                              <p className="text-sm text-muted-foreground mb-3">Expires: {payment.expiry}</p>
+                            )}
+                            <div className="flex space-x-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-orange-300 text-orange-700 hover:bg-orange-50"
+                              >
+                                Edit
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-red-300 text-red-700 hover:bg-red-50"
+                              >
+                                Delete
+                              </Button>
                             </div>
-                          </div>
-                          {method.isDefault && (
-                            <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
-                              Default
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button variant="outline" size="sm" data-testid={`edit-payment-${method.id}`}>
-                            Edit
-                          </Button>
-                          <Button variant="outline" size="sm" data-testid={`delete-payment-${method.id}`}>
-                            Delete
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  {(!user.paymentMethods || user.paymentMethods.length === 0) && (
-                    <div className="text-center py-8">
-                      <CreditCard className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                      <h3 className="font-medium mb-2">No payment methods saved</h3>
-                      <p className="text-muted-foreground text-sm">
-                        Add a payment method for faster checkout
-                      </p>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   )}
                 </CardContent>
               </Card>
             </TabsContent>
 
-            {/* Security Tab */}
-            <TabsContent value="security">
+            {/* Orders Tab */}
+            <TabsContent value="orders">
               <Card>
                 <CardHeader>
-                  <CardTitle>Security Settings</CardTitle>
+                  <CardTitle className="flex items-center">
+                    <CreditCard className="h-5 w-5 mr-2 text-orange-600" />
+                    Your Orders
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <h3 className="font-medium mb-4">Password</h3>
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <div className="font-medium">Password</div>
-                        <div className="text-sm text-muted-foreground">Last changed 3 months ago</div>
-                      </div>
-                      <Button variant="outline" data-testid="change-password">Change</Button>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <h3 className="font-medium mb-4">Two-Factor Authentication</h3>
-                    <div className="flex items-center justify-between p-4 border rounded-lg">
-                      <div>
-                        <div className="font-medium">Two-Factor Authentication</div>
-                        <div className="text-sm text-muted-foreground">
-                          Add an extra layer of security to your account
-                        </div>
-                      </div>
-                      <Switch data-testid="two-factor-toggle" />
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <h3 className="font-medium mb-4">Login Activity</h3>
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between p-3 border rounded-lg">
-                        <div>
-                          <div className="font-medium">Current Session</div>
-                          <div className="text-sm text-muted-foreground">Chrome on Windows • New York, NY</div>
-                        </div>
-                        <span className="text-green-600 text-sm">Active now</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* Notifications Tab */}
-            <TabsContent value="notifications">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notification Preferences</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <h3 className="font-medium mb-4">Email Notifications</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium">Order Updates</div>
-                          <div className="text-sm text-muted-foreground">
-                            Receive emails about your order status
-                          </div>
-                        </div>
-                        <Switch defaultChecked data-testid="email-orders" />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium">Promotional Emails</div>
-                          <div className="text-sm text-muted-foreground">
-                            Receive emails about deals and promotions
-                          </div>
-                        </div>
-                        <Switch data-testid="email-promotions" />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium">Product Recommendations</div>
-                          <div className="text-sm text-muted-foreground">
-                            Receive personalized product suggestions
-                          </div>
-                        </div>
-                        <Switch defaultChecked data-testid="email-recommendations" />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div>
-                    <h3 className="font-medium mb-4">Push Notifications</h3>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium">Order Updates</div>
-                          <div className="text-sm text-muted-foreground">
-                            Get notified when your order status changes
-                          </div>
-                        </div>
-                        <Switch defaultChecked data-testid="push-orders" />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-medium">Deals & Offers</div>
-                          <div className="text-sm text-muted-foreground">
-                            Get notified about limited-time offers
-                          </div>
-                        </div>
-                        <Switch data-testid="push-deals" />
-                      </div>
-                    </div>
+                <CardContent>
+                  <p className="text-muted-foreground">Order history will be displayed here.</p>
+                  <div className="mt-4 text-center">
+                    <Link href="/sure-findings/orders">
+                      <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+                        View All Orders
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

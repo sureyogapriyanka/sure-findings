@@ -4,116 +4,112 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: hsl(189, 90%, 4%);
-  --foreground: hsl(222.2 84% 4.9%);
-  --card: hsl(0 0% 100%);
-  --card-foreground: hsl(222.2 84% 4.9%);
-  --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(222.2 84% 4.9%);
-  --primary: hsl(38 100% 50%);
-  --primary-foreground: hsl(222.2 84% 4.9%);
-  --secondary: hsl(210 40% 96%);
-  --secondary-foreground: hsl(222.2 47.4% 11.2%);
-  --muted: hsl(210 40% 96%);
-  --muted-foreground: hsl(215.4 16.3% 46.9%);
-  --accent: hsl(210 40% 96%);
-  --accent-foreground: hsl(222.2 47.4% 11.2%);
-  --destructive: hsl(0 84.2% 60.2%);
-  --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(214.3 31.8% 91.4%);
-  --input: hsl(214.3 31.8% 91.4%);
-  --ring: hsl(38 100% 50%);
-  --chart-1: hsl(38 100% 50%);
-  --chart-2: hsl(159.7826 100% 36.0784%);
-  --chart-3: hsl(42.0290 92.8251% 56.2745%);
-  --chart-4: hsl(147.1429 78.5047% 41.9608%);
-  --chart-5: hsl(341.4894 75.2000% 50.9804%);
-  --sidebar: hsl(0 0% 100%);
-  --sidebar-foreground: hsl(222.2 84% 4.9%);
-  --sidebar-primary: hsl(38 100% 50%);
-  --sidebar-primary-foreground: hsl(222.2 84% 4.9%);
-  --sidebar-accent: hsl(210 40% 96%);
-  --sidebar-accent-foreground: hsl(222.2 47.4% 11.2%);
-  --sidebar-border: hsl(214.3 31.8% 91.4%);
-  --sidebar-ring: hsl(38 100% 50%);
-  --font-sans: 'Amazon Ember', 'Inter', sans-serif;
-  --font-serif: 'Georgia', serif;
-  --font-mono: 'Menlo', monospace;
-  --radius: 0.5rem;
-  --amazon-orange: hsl(38 100% 50%);
-  --amazon-navy: hsl(217 32% 17%);
-  --amazon-lightnavy: hsl(217 23% 29%);
-  --amazon-yellow: hsl(48 100% 47%);
-  --amazon-green: hsl(159 100% 25%);
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+    --primary: 24 9.8% 10%;
+    --primary-foreground: 60 9.1% 97.8%;
+    --secondary: 60 4.8% 95.9%;
+    --secondary-foreground: 24 9.8% 10%;
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+    --accent: 60 4.8% 95.9%;
+    --accent-foreground: 24 9.8% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 20 14.3% 4.1%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 60 9.1% 97.8%;
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 60 9.1% 97.8%;
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+    --primary: 60 9.1% 97.8%;
+    --primary-foreground: 24 9.8% 10%;
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 24 5.7% 82.9%;
+  }
 }
 
-.dark {
-  --background: hsl(222.2 84% 4.9%);
-  --foreground: hsl(210 40% 98%);
-  --card: hsl(222.2 84% 4.9%);
-  --card-foreground: hsl(210 40% 98%);
-  --popover: hsl(222.2 84% 4.9%);
-  --popover-foreground: hsl(210 40% 98%);
-  --primary: hsl(38 100% 50%);
-  --primary-foreground: hsl(222.2 84% 4.9%);
-  --secondary: hsl(217.2 32.6% 17.5%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(217.2 32.6% 17.5%);
-  --muted-foreground: hsl(215 20.2% 65.1%);
-  --accent: hsl(217.2 32.6% 17.5%);
-  --accent-foreground: hsl(210 40% 98%);
-  --destructive: hsl(0 62.8% 30.6%);
-  --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(217.2 32.6% 17.5%);
-  --input: hsl(217.2 32.6% 17.5%);
-  --ring: hsl(38 100% 50%);
-  --chart-1: hsl(220 70% 50%);
-  --chart-2: hsl(160 60% 45%);
-  --chart-3: hsl(30 80% 55%);
-  --chart-4: hsl(280 65% 60%);
-  --chart-5: hsl(340 75% 55%);
-  --sidebar: hsl(222.2 84% 4.9%);
-  --sidebar-foreground: hsl(210 40% 98%);
-  --sidebar-primary: hsl(38 100% 50%);
-  --sidebar-primary-foreground: hsl(222.2 84% 4.9%);
-  --sidebar-accent: hsl(217.2 32.6% 17.5%);
-  --sidebar-accent-foreground: hsl(210 40% 98%);
-  --sidebar-border: hsl(217.2 32.6% 17.5%);
-  --sidebar-ring: hsl(38 100% 50%);
+@layer base {
+  * {
+    @apply border-[#E5E5E5];
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    /* Footer-to-top gradient, bright orange focus */
+    background: linear-gradient(to top,
+        #ff9900 0%,
+        /* Amazon orange at footer */
+        #ffa733 35%,
+        /* brighter orange mid */
+        #ffd280 70%,
+        /* soft warm fade */
+        transparent 100%
+        /* clear near top */
+      );
+    background-attachment: fixed;
+  }
 }
 
+/* Custom styles for the e-commerce site */
 @layer components {
   .amazon-btn {
     background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
     border: 1px solid #a88734;
     border-radius: 3px;
-    box-shadow: 0 1px 0 rgba(255,255,255,.4) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .4) inset;
     transition: all 0.1s;
     @apply text-gray-800 font-semibold;
   }
-  
+
   .amazon-btn:hover {
     background: linear-gradient(to bottom, #f5d78e, #eeb933);
-    box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset;
   }
 
   .product-card {
     transition: all 0.2s ease;
+    background-color: var(--card);
+    color: var(--card-foreground);
   }
-  
+
   .product-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
   .category-banner {
     transition: all 0.2s ease;
+    background-color: var(--card);
+    color: var(--card-foreground);
   }
-  
+
   .category-banner:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
   .star-rating {
@@ -133,10 +129,76 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  /* Touch-friendly styles for better mobile experience */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Scrollbar styling for better mobile experience */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  /* High contrast text utilities for better readability */
+  .text-high-contrast {
+    color: #131A22;
+  }
+
+  .text-high-contrast-dark {
+    color: #ffffff;
+  }
+
+  /* Amazon-inspired button styles */
+  .btn-primary {
+    background-color: #FF9900;
+    color: #131A22;
+    border: 1px solid #a88734;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.1s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #e68a00;
+    border-color: #9c7a2d;
+  }
+
+  .btn-secondary {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #666666;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: all 0.1s ease;
+  }
+
+  .btn-secondary:hover {
+    background-color: #444444;
+    border-color: #777777;
+  }
+
+  /* Responsive utility classes */
+  .max-w-full {
+    max-width: 100%;
+  }
+
+  .h-auto {
+    height: auto;
   }
 }

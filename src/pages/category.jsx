@@ -1,284 +1,126 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'wouter';
-import { getProductsByCategory, getCategoryById } from '../lib/products';
+import { Link, useLocation } from 'wouter';
 import ProductCard from '../components/ProductCard';
-import { Button } from '../components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Checkbox } from '../components/ui/checkbox';
+import { getProductsByCategory, CATEGORIES } from '../lib/products';
+import { Button } from '../components/ui/button.jsx';
+import { ChevronLeft } from 'lucide-react';
 
 const Category = () => {
-  const { categoryName } = useParams();
+  const [location, setLocation] = useLocation();
+  const categoryPath = location.split('/')[3];
+  const category = CATEGORIES.find(cat => cat.id === categoryPath);
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [filters, setFilters] = useState({
-    priceRange: [],
-    brands: [],
-    rating: '',
-    sortBy: 'relevance'
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [category, setCategory] = useState(null);
-  
-  const productsPerPage = 12;
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const categoryData = getCategoryById(categoryName);
-    setCategory(categoryData);
-    
-    const categoryProducts = getProductsByCategory(categoryName);
-    setProducts(categoryProducts);
-    applyFilters(categoryProducts, filters);
-  }, [categoryName, filters]);
-
-  useEffect(() => {
-    applyFilters(products, filters);
-  }, [filters, products]);
-
-  const applyFilters = (productList, currentFilters) => {
-    let filtered = [...productList];
-
-    // Price range filter
-    if (currentFilters.priceRange.length > 0) {
-      filtered = filtered.filter(product => {
-        return currentFilters.priceRange.some(range => {
-          switch (range) {
-            case '0-50':
-              return product.price <= 50;
-            case '50-200':
-              return product.price > 50 && product.price <= 200;
-            case '200-500':
-              return product.price > 200 && product.price <= 500;
-            case '500+':
-              return product.price > 500;
-            default:
-              return true;
-          }
-        });
-      });
-    }
-
-    // Brand filter
-    if (currentFilters.brands.length > 0) {
-      filtered = filtered.filter(product => 
-        currentFilters.brands.includes(product.brand)
-      );
-    }
-
-    // Rating filter
-    if (currentFilters.rating) {
-      const minRating = parseFloat(currentFilters.rating);
-      filtered = filtered.filter(product => product.rating >= minRating);
-    }
-
-    // Sort products
-    switch (currentFilters.sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'newest':
-        filtered.sort((a, b) => parseInt(b.id) - parseInt(a.id));
-        break;
-      default:
-        // Keep original order for relevance
-        break;
-    }
-
-    setFilteredProducts(filtered);
-    setCurrentPage(1);
-  };
-
-  const handleFilterChange = (filterType, value, checked) => {
-    setFilters(prev => {
-      const newFilters = { ...prev };
-      
-      if (filterType === 'priceRange' || filterType === 'brands') {
-        if (checked) {
-          newFilters[filterType] = [...prev[filterType], value];
-        } else {
-          newFilters[filterType] = prev[filterType].filter(item => item !== value);
+    const fetchCategoryProducts = async () => {
+      if (category) {
+        try {
+          setLoading(true);
+          setError(null);
+          // Use the category name from CATEGORIES constant to match products
+          // Convert to lowercase to match backend data
+          const categoryProducts = await getProductsByCategory(category.name);
+          setProducts(categoryProducts);
+        } catch (err) {
+          console.error('Error fetching category products:', err);
+          setError('Failed to load products');
+        } finally {
+          setLoading(false);
         }
-      } else {
-        newFilters[filterType] = value;
       }
-      
-      return newFilters;
-    });
-  };
+    };
 
-  const availableBrands = [...new Set(products.map(p => p.brand))].sort();
-
-  // Pagination
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + productsPerPage);
+    fetchCategoryProducts();
+  }, [category]);
 
   if (!category) {
-    return <div className="min-h-screen flex items-center justify-center">Category not found</div>;
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
+        <div className="text-center py-12">
+          <h1 className="text-2xl font-bold mb-4">Category not found</h1>
+          <Link href="/">
+            <Button variant="outline">
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+          <span className="ml-3">Loading products...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold mb-2 text-red-500">Error</h2>
+          <p className="text-muted-foreground mb-4">Failed to load products: {error}</p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      {/* Breadcrumb */}
-      <nav className="text-sm text-muted-foreground mb-4">
-        <Link href="/sure-findings/" className="hover:text-primary">Home</Link>
-        <span className="mx-2">/</span>
-        <span>{category.name}</span>
-      </nav>
-
-      {/* Category Header */}
+    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">{category.name}</h1>
-        <p className="text-muted-foreground">{category.description}</p>
+        <Link href="/" className="inline-flex items-center text-orange-600 hover:text-orange-800 mb-4">
+          <ChevronLeft className="h-4 w-4 mr-1" />
+          Back to Home
+        </Link>
+        <h1 className="text-3xl font-bold mb-2 text-orange-900">{category.name}</h1>
+        <p className="text-muted-foreground">
+          {products.length > 0
+            ? `Discover our collection of ${category.name.toLowerCase()} products`
+            : `No products available in ${category.name} category yet`}
+        </p>
       </div>
 
-      <div className="flex gap-8">
-        {/* Filters Sidebar */}
-        <div className="w-64 flex-shrink-0">
-          <div className="bg-card p-4 rounded-lg shadow-sm border">
-            <h3 className="font-semibold mb-4">Filters</h3>
-
-            {/* Price Range */}
-            <div className="mb-6">
-              <h4 className="font-medium mb-2">Price Range</h4>
-              <div className="space-y-2">
-                {[
-                  { value: '0-50', label: '$0 - $50' },
-                  { value: '50-200', label: '$50 - $200' },
-                  { value: '200-500', label: '$200 - $500' },
-                  { value: '500+', label: '$500+' }
-                ].map(({ value, label }) => (
-                  <div key={value} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`price-${value}`}
-                      checked={filters.priceRange.includes(value)}
-                      onCheckedChange={(checked) => handleFilterChange('priceRange', value, checked)}
-                      data-testid={`filter-price-${value}`}
-                    />
-                    <label htmlFor={`price-${value}`} className="text-sm">{label}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Brand */}
-            <div className="mb-6">
-              <h4 className="font-medium mb-2">Brand</h4>
-              <div className="space-y-2">
-                {availableBrands.slice(0, 6).map((brand) => (
-                  <div key={brand} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`brand-${brand}`}
-                      checked={filters.brands.includes(brand)}
-                      onCheckedChange={(checked) => handleFilterChange('brands', brand, checked)}
-                      data-testid={`filter-brand-${brand.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}
-                    />
-                    <label htmlFor={`brand-${brand}`} className="text-sm">{brand}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Rating */}
-            <div className="mb-6">
-              <h4 className="font-medium mb-2">Customer Rating</h4>
-              <div className="space-y-2">
-                {[
-                  { value: '4', label: '4 & Up' },
-                  { value: '3', label: '3 & Up' },
-                  { value: '2', label: '2 & Up' }
-                ].map(({ value, label }) => (
-                  <div key={value} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`rating-${value}`}
-                      checked={filters.rating === value}
-                      onCheckedChange={(checked) => handleFilterChange('rating', checked ? value : '', checked)}
-                      data-testid={`filter-rating-${value}`}
-                    />
-                    <label htmlFor={`rating-${value}`} className="text-sm">{label}</label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+      {products.length === 0 ? (
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold mb-2">No products found</h2>
+          <p className="text-muted-foreground mb-4">
+            There are currently no products in this category. Check back later or contact us to suggest products for this category.
+          </p>
+          <Link href="/">
+            <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+              Continue Shopping
+            </Button>
+          </Link>
         </div>
-
-        {/* Products Grid */}
-        <div className="flex-1">
-          {/* Sort Options */}
-          <div className="flex justify-between items-center mb-6">
-            <div className="text-muted-foreground">
-              {filteredProducts.length.toLocaleString()} results for "{category.name}"
-            </div>
-            <Select 
-              value={filters.sortBy}
-              onValueChange={(value) => handleFilterChange('sortBy', value)}
-            >
-              <SelectTrigger className="w-48" data-testid="sort-select">
-                <SelectValue placeholder="Sort by: Relevance" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="relevance">Sort by: Relevance</SelectItem>
-                <SelectItem value="price-low">Price: Low to High</SelectItem>
-                <SelectItem value="price-high">Price: High to Low</SelectItem>
-                <SelectItem value="rating">Customer Rating</SelectItem>
-                <SelectItem value="newest">Newest Arrivals</SelectItem>
-              </SelectContent>
-            </Select>
+      ) : (
+        <>
+          <div className="mb-6 flex justify-between items-center">
+            <p className="text-muted-foreground">
+              Showing {products.length} {products.length === 1 ? 'product' : 'products'}
+            </p>
           </div>
 
-          {/* Product Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {paginatedProducts.map((product) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center">
-              <nav className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  data-testid="pagination-previous"
-                >
-                  Previous
-                </Button>
-                
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const pageNum = i + 1;
-                  return (
-                    <Button
-                      key={pageNum}
-                      variant={currentPage === pageNum ? "default" : "outline"}
-                      onClick={() => setCurrentPage(pageNum)}
-                      data-testid={`pagination-${pageNum}`}
-                    >
-                      {pageNum}
-                    </Button>
-                  );
-                })}
-                
-                <Button
-                  variant="outline"
-                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                  disabled={currentPage === totalPages}
-                  data-testid="pagination-next"
-                >
-                  Next
-                </Button>
-              </nav>
-            </div>
-          )}
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

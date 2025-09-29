@@ -1,266 +1,239 @@
-// Initialize localStorage with default data structure
+// Storage service using localStorage instead of backend APIs
+const STORAGE_KEY = 'ecommerce_app_data';
+
 export const initializeStorage = () => {
-  if (!localStorage.getItem('amazonClone')) {
-    const initialData = {
-      currentUser: 'user1',
-      users: {
-        user1: {
-          id: 'user1',
-          name: 'John Doe',
-          email: 'john.doe@email.com',
-          phone: '+1 (555) 123-4567',
-          addresses: [
-            {
-              id: 'addr1',
-              type: 'Home',
-              name: 'John Doe',
-              street: '123 Main Street',
-              city: 'New York',
-              state: 'NY',
-              zip: '10001',
-              country: 'United States',
-              isDefault: true
-            }
-          ],
-          paymentMethods: [
-            {
-              id: 'card1',
-              type: 'credit',
-              last4: '3456',
-              expiryMonth: '12',
-              expiryYear: '27',
-              brand: 'Visa',
-              isDefault: true
-            }
-          ],
-          cart: [],
-          wishlist: [],
-          orders: [],
-          reviews: []
+  // Initialize localStorage with default data if not present
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    const defaultData = {
+      currentUser: null,
+      users: [
+        {
+          id: '1',
+          username: 'Bhetapudi.Manasa',
+          email: 'bhetapudi.manasa@example.com',
+          password: '231FA07036',
+          role: 'user',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: '2',
+          username: 'Sure.Yoga Priyanka',
+          email: 'sure.yoga.priyanka@example.com',
+          password: '231FA07046',
+          role: 'user',
+          createdAt: new Date().toISOString()
         }
-      }
+      ],
+      cart: [], // Start with empty cart
+      wishlist: [],
+      orders: [],
+      addresses: []
     };
-    localStorage.setItem('amazonClone', JSON.stringify(initialData));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultData));
   }
+  return Promise.resolve();
 };
 
 export const getStorageData = () => {
-  initializeStorage();
-  return JSON.parse(localStorage.getItem('amazonClone'));
+  const data = localStorage.getItem(STORAGE_KEY);
+  return Promise.resolve(data ? JSON.parse(data) : {});
 };
 
 export const setStorageData = (data) => {
-  localStorage.setItem('amazonClone', JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  return Promise.resolve();
 };
 
 export const getCurrentUser = () => {
-  const data = getStorageData();
-  return data.users[data.currentUser];
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  return data.currentUser || null;
 };
 
 export const updateCurrentUser = (updates) => {
-  const data = getStorageData();
-  data.users[data.currentUser] = { ...data.users[data.currentUser], ...updates };
-  setStorageData(data);
-  return data.users[data.currentUser];
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  data.currentUser = { ...data.currentUser, ...updates };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  return Promise.resolve(data.currentUser);
 };
 
-// Cart operations
-export const addToCart = (productId, quantity = 1, options = {}) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  
-  const existingItem = user.cart.find(item => 
-    item.productId === productId && 
-    JSON.stringify(item.options) === JSON.stringify(options)
-  );
-  
-  if (existingItem) {
-    existingItem.quantity += quantity;
+// Cart operations using localStorage
+export const addToCart = async (productId, quantity = 1, options = {}) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  const existingItemIndex = data.cart.findIndex(item => item.productId === productId);
+
+  if (existingItemIndex >= 0) {
+    data.cart[existingItemIndex].quantity += quantity;
   } else {
-    user.cart.push({
+    data.cart.push({
       id: Date.now().toString(),
       productId,
       quantity,
-      options,
-      addedAt: new Date().toISOString()
+      ...options
     });
   }
-  
-  setStorageData(data);
-  return user.cart;
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  return data.cart;
 };
 
-export const updateCartItemQuantity = (itemId, quantity) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  
-  if (quantity <= 0) {
-    user.cart = user.cart.filter(item => item.id !== itemId);
-  } else {
-    const item = user.cart.find(item => item.id === itemId);
-    if (item) {
-      item.quantity = quantity;
+export const updateCartItemQuantity = async (itemId, quantity) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  const itemIndex = data.cart.findIndex(item => item.id === itemId);
+
+  if (itemIndex >= 0) {
+    if (quantity <= 0) {
+      data.cart.splice(itemIndex, 1);
+    } else {
+      data.cart[itemIndex].quantity = quantity;
     }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
-  
-  setStorageData(data);
-  return user.cart;
+
+  // Filter out items with invalid data
+  const validCart = data.cart.filter(item =>
+    item.productId &&
+    item.quantity &&
+    item.quantity > 0
+  );
+
+  return validCart;
 };
 
-export const removeFromCart = (itemId) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  user.cart = user.cart.filter(item => item.id !== itemId);
-  setStorageData(data);
-  return user.cart;
-};
+export const removeFromCart = async (itemId) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  const itemIndex = data.cart.findIndex(item => item.id === itemId);
 
-export const clearCart = () => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  user.cart = [];
-  setStorageData(data);
-  return user.cart;
-};
-
-// Wishlist operations
-export const addToWishlist = (productId) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  
-  if (!user.wishlist.includes(productId)) {
-    user.wishlist.push(productId);
-    setStorageData(data);
+  if (itemIndex >= 0) {
+    data.cart.splice(itemIndex, 1);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
-  
-  return user.wishlist;
+
+  // Filter out items with invalid data
+  const validCart = data.cart.filter(item =>
+    item.productId &&
+    item.quantity &&
+    item.quantity > 0
+  );
+
+  return validCart;
 };
 
-export const removeFromWishlist = (productId) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  user.wishlist = user.wishlist.filter(id => id !== productId);
-  setStorageData(data);
-  return user.wishlist;
+export const clearCart = async () => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  data.cart = [];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  return data.cart;
 };
 
-// Order operations
-export const createOrder = (orderData) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  
-  const order = {
-    id: Date.now().toString(),
-    number: `111-${Math.random().toString().substr(2, 7)}-${Math.random().toString().substr(2, 7)}`,
-    date: new Date().toISOString(),
-    status: 'Processing',
-    tracking: {
-      current: 'processing',
-      steps: [
-        { name: 'Order placed', status: 'completed', date: new Date().toISOString() },
-        { name: 'Processing', status: 'current', date: null },
-        { name: 'Shipped', status: 'pending', date: null },
-        { name: 'Delivered', status: 'pending', date: null }
-      ]
-    },
-    ...orderData
-  };
-  
-  user.orders.unshift(order);
-  setStorageData(data);
-  return order;
+// Wishlist operations using localStorage
+export const addToWishlist = async (productId) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  const existingItem = data.wishlist.find(item => item.productId === productId);
+
+  if (!existingItem) {
+    data.wishlist.push({
+      id: Date.now().toString(),
+      productId
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+
+  return data.wishlist;
 };
 
-export const updateOrderStatus = (orderId, status, trackingStep = null) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  const order = user.orders.find(o => o.id === orderId);
-  
+export const removeFromWishlist = async (productId) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  data.wishlist = data.wishlist.filter(item => item.productId !== productId);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  return data.wishlist;
+};
+
+// Order operations using localStorage
+export const createOrder = async (orderData) => {
+  try {
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+    // Initialize orders array if it doesn't exist
+    if (!data.orders) {
+      data.orders = [];
+    }
+
+    const order = {
+      id: 'ORD' + Date.now().toString().slice(-6),
+      ...orderData,
+      createdAt: new Date().toISOString(),
+      status: orderData.status || 'pending'
+    };
+
+    data.orders.push(order);
+    data.cart = []; // Clear cart after order creation
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+    return order;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateOrderStatus = async (orderId, status, trackingStep = null) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+  // Initialize orders array if it doesn't exist
+  if (!data.orders) {
+    data.orders = [];
+  }
+
+  const order = data.orders.find(o => o.id === orderId);
+
   if (order) {
     order.status = status;
     if (trackingStep) {
-      const stepIndex = order.tracking.steps.findIndex(s => s.name.toLowerCase() === trackingStep.toLowerCase());
-      if (stepIndex !== -1) {
-        order.tracking.steps[stepIndex].status = 'completed';
-        order.tracking.steps[stepIndex].date = new Date().toISOString();
-        order.tracking.current = trackingStep.toLowerCase();
-        
-        // Update subsequent step to current if exists
-        if (stepIndex + 1 < order.tracking.steps.length) {
-          order.tracking.steps[stepIndex + 1].status = 'current';
-          order.tracking.current = order.tracking.steps[stepIndex + 1].name.toLowerCase();
-        }
-      }
+      order.trackingStep = trackingStep;
     }
-    setStorageData(data);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }
-  
-  return order;
+
+  return order || null;
 };
 
-// Review operations
-export const addReview = (productId, review) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  
-  const newReview = {
-    id: Date.now().toString(),
-    productId,
-    userId: user.id,
-    userName: user.name,
-    rating: review.rating,
-    title: review.title,
-    content: review.content,
-    date: new Date().toISOString(),
-    verified: true,
-    helpful: 0
-  };
-  
-  user.reviews.push(newReview);
-  setStorageData(data);
-  return newReview;
+// Review operations using localStorage
+export const addReview = async (productId, review) => {
+  // In a real app, this would be stored with the product
+  // For now, we'll just return the review
+  return { productId, ...review, id: Date.now().toString() };
 };
 
-// Address operations
-export const addAddress = (address) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  
-  const newAddress = {
-    id: Date.now().toString(),
-    ...address
-  };
-  
-  if (address.isDefault) {
-    user.addresses.forEach(addr => addr.isDefault = false);
+// Address operations using localStorage
+export const addAddress = async (address) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+
+  // Initialize addresses array if it doesn't exist
+  if (!data.addresses) {
+    data.addresses = [];
   }
-  
-  user.addresses.push(newAddress);
-  setStorageData(data);
+
+  const newAddress = { id: Date.now().toString(), ...address };
+  data.addresses.push(newAddress);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   return newAddress;
 };
 
-export const updateAddress = (addressId, updates) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  const addressIndex = user.addresses.findIndex(addr => addr.id === addressId);
-  
-  if (addressIndex !== -1) {
-    if (updates.isDefault) {
-      user.addresses.forEach(addr => addr.isDefault = false);
-    }
-    user.addresses[addressIndex] = { ...user.addresses[addressIndex], ...updates };
-    setStorageData(data);
+export const updateAddress = async (addressId, updates) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  const addressIndex = data.addresses.findIndex(addr => addr.id === addressId);
+
+  if (addressIndex >= 0) {
+    data.addresses[addressIndex] = { ...data.addresses[addressIndex], ...updates };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return data.addresses[addressIndex];
   }
-  
-  return user.addresses[addressIndex];
+
+  return null;
 };
 
-export const deleteAddress = (addressId) => {
-  const data = getStorageData();
-  const user = data.users[data.currentUser];
-  user.addresses = user.addresses.filter(addr => addr.id !== addressId);
-  setStorageData(data);
-  return user.addresses;
+export const deleteAddress = async (addressId) => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  data.addresses = data.addresses.filter(addr => addr.id !== addressId);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  return data.addresses;
 };

@@ -1,278 +1,280 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Trash2, Heart, ShoppingCart } from 'lucide-react';
+import { Button } from '../components/ui/button.jsx';
+import { Input } from '../components/ui/input.jsx';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card.jsx';
 import { useCart } from '../hooks/useCart';
-// import { addToWishlist, removeFromCart as removeFromStorage } from '../lib/storage';
-import { Button } from '../components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Separator } from '../components/ui/separator';
+import { useToast } from '../hooks/use-toast.js';
 
 const Cart = () => {
-  const {
-    getCartItems,
-    updateQuantity,
-    removeItem,
-    getCartSubtotal,
-    getCartTax,
-    getCartGrandTotal,
-    getCartItemCount
-  } = useCart();
-
-  const cartItems = getCartItems();
+  const { cart, removeItem, updateQuantity } = useCart();
   const [, setLocation] = useLocation();
-  const [savedItems, setSavedItems] = useState([]);
+  const [couponCode, setCouponCode] = useState('');
+  const { toast } = useToast();
+  const [removingItems, setRemovingItems] = useState(new Set());
 
-  const handleQuantityChange = (itemId, newQuantity) => {
-    updateQuantity(itemId, parseInt(newQuantity));
+  // Filter out items with invalid product data
+  const validCartItems = cart.filter(item =>
+    (item.product && item.product.price !== undefined && item.product.price !== null && !isNaN(item.product.price)) ||
+    (item.name && item.price !== undefined && item.price !== null && !isNaN(item.price)) // For mock API items
+  );
+
+  // Calculate totals only for valid items
+  const subtotal = validCartItems.reduce((sum, item) => {
+    const price = item.product?.price || item.price || 0;
+    return sum + (price * item.quantity || 0);
+  }, 0);
+
+  const shipping = subtotal > 0 ? (subtotal > 499 ? 0 : 49) : 0;
+  const tax = subtotal * 0.18; // 18% tax
+  const total = subtotal + shipping + tax;
+
+  const handleCheckout = async () => {
+    try {
+      // Redirect to checkout page for all cart items
+      setLocation('/checkout');
+    } catch (error) {
+      toast({
+        title: "Error Processing Checkout",
+        description: "Failed to proceed to checkout. Please try again.",
+        variant: "destructive",
+        duration: 5000, // 5 seconds
+      });
+    }
   };
 
-  const handleRemoveItem = (itemId) => {
-    removeItem(itemId);
+  const handleBuyNow = async (item) => {
+    try {
+      // Show redirecting message
+      toast({
+        title: "Redirecting to Secure Checkout 🔄",
+        description: (
+          <div className="text-center">
+            <p className="font-medium">{item.product?.name || item.name}</p>
+            <p className="text-sm mt-1">Preparing your order...</p>
+            <p className="text-sm mt-1 text-green-600 font-medium">
+              {formatPrice((item.product?.price || item.price) * item.quantity)} to be charged
+            </p>
+          </div>
+        ),
+        variant: "info",
+        duration: 5000, // 5 seconds
+      });
+
+      // Redirect to checkout page after a short delay
+      setTimeout(() => {
+        setLocation('/checkout');
+      }, 1500);
+    } catch (error) {
+      toast({
+        title: "Error Processing Order",
+        description: "Failed to proceed to checkout. Please try again.",
+        variant: "destructive",
+        duration: 5000, // 5 seconds
+      });
+    }
   };
 
-  const handleSaveForLater = (item) => {
-    // Move item to saved for later
-    setSavedItems(prev => [...prev, item]);
-    removeItem(item.id);
-  };
+  const handleRemoveItem = async (itemId) => {
+    try {
+      // Set loading state for this item
+      setRemovingItems(prev => new Set(prev).add(itemId));
 
-  const handleMoveToCart = (savedItem) => {
-    // Move item back to cart
-    setSavedItems(prev => prev.filter(item => item.id !== savedItem.id));
-    // Note: In a real implementation, you'd add it back to cart storage
+      await removeItem(itemId);
+
+      toast({
+        title: "Item Removed Successfully! 🗑️",
+        description: "Item has been removed from your cart.",
+        variant: "success",
+        duration: 5000, // 5 seconds
+      });
+    } catch (error) {
+      toast({
+        title: "Error Removing Item",
+        description: "Failed to remove item from cart. Please try again.",
+        variant: "destructive",
+        duration: 5000, // 5 seconds
+      });
+    } finally {
+      // Remove loading state for this item
+      setRemovingItems(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
+    }
   };
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
+    if (price === undefined || price === null || isNaN(price)) {
+      return '₹0.00';
+    }
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(price);
   };
 
-  if (cartItems.length === 0 && savedItems.length === 0) {
+  if (validCartItems.length === 0) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-16 text-center">
-        <ShoppingCart className="h-24 w-24 mx-auto text-gray-400 mb-4" />
-        <h1 className="text-3xl font-bold mb-4">Your cart is empty</h1>
-        <p className="text-muted-foreground mb-8">
-          Looks like you haven't added any items to your cart yet.
-        </p>
-        <Link href="/sure-findings/">
-          <Button className="bg-amazon-orange hover:bg-orange-600 text-gray-800">
-            Continue Shopping
-          </Button>
-        </Link>
+      <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
+        <div className="text-center py-12">
+          <h1 className="text-2xl md:text-3xl font-bold mb-4 text-orange-800">Your Cart</h1>
+          <p className="text-muted-foreground mb-8">Your cart is empty</p>
+          <Link href="/home">
+            <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
+              Continue Shopping
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+    <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-center bg-gradient-to-r from-orange-800 via-orange-600 to-orange-800 bg-clip-text text-transparent">Your Cart</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         {/* Cart Items */}
         <div className="lg:col-span-2">
-          <div className="space-y-4">
-            {cartItems.map((item) => (
-              <div key={item.id} className="bg-card rounded-lg shadow-sm border border-border p-6">
-                <div className="flex items-start space-x-4">
-                  {/* Product Image */}
-                  <Link href={`/product/${item.product.id}`}>
-                    <img
-                      src={item.product.images[0]}
-                      alt={item.product.name}
-                      className="w-24 h-24 object-cover rounded-md cursor-pointer"
-                      data-testid={`cart-item-image-${item.id}`}
-                    />
-                  </Link>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-orange-800">Items ({validCartItems.length})</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {validCartItems.map((item) => (
+                <div key={item._id || item.productId} className="flex flex-col sm:flex-row gap-4 p-4 border-b border-orange-100 last:border-b-0">
+                  <img
+                    src={item.product?.images?.[0] || item.image || 'https://via.placeholder.com/100x100?text=No+Image'}
+                    alt={item.product?.name || item.name}
+                    className="w-24 h-24 sm:w-20 sm:h-20 object-cover rounded-md border border-orange-200 mx-auto sm:mx-0"
+                    onError={(e) => {
+                      e.target.src = 'https://via.placeholder.com/100x100?text=No+Image';
+                    }}
+                  />
+                  <div className="flex-grow">
+                    <h3 className="font-medium text-orange-900 text-sm md:text-base">{item.product?.name || item.name || 'Product Name'}</h3>
+                    <p className="text-xs md:text-sm text-muted-foreground mb-2">{item.product?.brand || 'Brand'}</p>
+                    <p className="font-bold text-orange-700 text-sm md:text-base">{formatPrice(item.product?.price || item.price)}</p>
 
-                  {/* Product Details */}
-                  <div className="flex-1">
-                    <Link href={`/product/${item.product.id}`}>
-                      <h3 className="font-semibold text-lg mb-1 hover:text-primary cursor-pointer" data-testid={`cart-item-name-${item.id}`}>
-                        {item.product.name}
-                      </h3>
-                    </Link>
-
-                    {/* Options */}
-                    {item.options && Object.keys(item.options).length > 0 && (
-                      <div className="text-sm text-muted-foreground mb-2">
-                        {Object.entries(item.options).map(([key, value]) => (
-                          <span key={key} className="mr-4">
-                            {key}: {value}
-                          </span>
-                        ))}
+                    <div className="flex flex-wrap items-center mt-3 gap-2">
+                      <div className="flex items-center border border-orange-300 rounded-md">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => updateQuantity(item._id || item.productId, Math.max(1, item.quantity - 1))}
+                          className="h-8 w-8 rounded-none border-r border-orange-300"
+                        >
+                          -
+                        </Button>
+                        <span className="px-3 text-sm">{item.quantity}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => updateQuantity(item._id || item.productId, item.quantity + 1)}
+                          className="h-8 w-8 rounded-none border-l border-orange-300"
+                        >
+                          +
+                        </Button>
                       </div>
-                    )}
-
-                    {/* Quantity and Actions */}
-                    <div className="flex items-center space-x-4 mb-3">
-                      <Select
-                        value={item.quantity.toString()}
-                        onValueChange={(value) => handleQuantityChange(item.id, value)}
-                      >
-                        <SelectTrigger className="w-20" data-testid={`quantity-select-${item.id}`}>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
-                            <SelectItem key={num} value={num.toString()}>
-                              {num}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
 
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleRemoveItem(item.id)}
-                        data-testid={`remove-item-${item.id}`}
+                        onClick={() => handleRemoveItem(item._id || item.productId)}
+                        disabled={removingItems.has(item._id || item.productId)}
+                        className="text-red-600 hover:text-red-800 hover:bg-red-50 text-sm"
                       >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Remove
+                        {removingItems.has(item._id || item.productId) ? (
+                          <>
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-red-600 mr-1"></div>
+                            Removing...
+                          </>
+                        ) : (
+                          'Remove'
+                        )}
                       </Button>
 
                       <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleSaveForLater(item)}
-                        data-testid={`save-later-${item.id}`}
+                        onClick={() => handleBuyNow(item)}
+                        className="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white py-1 px-3 text-xs md:text-sm"
                       >
-                        <Heart className="h-4 w-4 mr-1" />
-                        Save for later
+                        Buy Now
                       </Button>
                     </div>
-
-                    {/* Stock Status */}
-                    <div className="text-green-600 text-sm">
-                      <span>✓ In Stock</span>
-                    </div>
-                  </div>
-
-                  {/* Price */}
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-primary" data-testid={`item-total-${item.id}`}>
-                      {formatPrice(item.totalPrice)}
-                    </div>
-                    {item.quantity > 1 && (
-                      <div className="text-sm text-muted-foreground">
-                        {formatPrice(item.product.price)} each
-                      </div>
-                    )}
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Continue Shopping */}
-          <div className="text-center mt-6">
-            <Link href="/sure-findings/">
-              <Button variant="outline">
-                ← Continue Shopping
-              </Button>
-            </Link>
-          </div>
+              ))}
+            </CardContent>
+          </Card>
         </div>
 
         {/* Order Summary */}
-        <div className="lg:col-span-1">
-          <div className="bg-card rounded-lg shadow-sm border border-border p-6 sticky top-6">
-            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-
-            <div className="space-y-3 mb-4">
+        <div>
+          <Card className="bg-gradient-to-br from-white to-orange-50 border border-orange-200">
+            <CardHeader>
+              <CardTitle className="text-orange-800">Order Summary</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div className="flex justify-between">
-                <span>Items ({getCartItemCount()}):</span>
-                <span data-testid="cart-subtotal">{formatPrice(getCartSubtotal())}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping & handling:</span>
-                <span className="text-green-600">FREE</span>
+                <span>Subtotal</span>
+                <span className="font-medium">{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Total before tax:</span>
-                <span>{formatPrice(getCartSubtotal())}</span>
+                <span>Shipping</span>
+                <span className="font-medium">{shipping > 0 ? formatPrice(shipping) : 'FREE'}</span>
               </div>
               <div className="flex justify-between">
-                <span>Estimated tax:</span>
-                <span data-testid="cart-tax">{formatPrice(getCartTax())}</span>
+                <span>Tax</span>
+                <span className="font-medium">{formatPrice(tax)}</span>
               </div>
-              <Separator />
-              <div className="flex justify-between text-lg font-bold">
-                <span>Order total:</span>
-                <span className="text-primary" data-testid="cart-total">
-                  {formatPrice(getCartGrandTotal())}
-                </span>
+              <div className="border-t border-orange-200 pt-4 flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span className="text-orange-700">{formatPrice(total)}</span>
               </div>
-            </div>
 
-            {/* Free Shipping Notice */}
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3 mb-4">
-              <div className="text-green-700 text-sm">
-                ✓ Your order qualifies for FREE Shipping
-              </div>
-            </div>
-
-            {/* Proceed to Checkout */}
-            <Button
-              className="w-full bg-amazon-orange hover:bg-orange-600 text-gray-800 font-semibold py-3 mb-3"
-              data-testid="proceed-checkout"
-              onClick={() => setLocation('/sure-findings/checkout')}
-            >
-              Proceed to Checkout
-            </Button>
-
-            {/* Payment Methods */}
-            <div className="text-center text-sm text-muted-foreground">
-              <div className="mb-2">We accept:</div>
-              <div className="flex justify-center space-x-2 text-2xl">
-                <span>💳</span>
-                <span>💰</span>
-                <span>🏦</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Saved for Later */}
-      {savedItems.length > 0 && (
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-6">Saved for Later</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {savedItems.map((item) => (
-              <div key={item.id} className="bg-card rounded-lg shadow-sm border border-border p-4">
-                <img
-                  src={item.product.images[0]}
-                  alt={item.product.name}
-                  className="w-full h-32 object-cover rounded-md mb-3"
-                />
-                <h3 className="font-semibold mb-2">{item.product.name}</h3>
-                <div className="text-lg font-bold text-primary mb-3">
-                  {formatPrice(item.product.price)}
-                </div>
-                <div className="space-y-2">
-                  <Button
-                    className="w-full bg-amazon-orange hover:bg-orange-600 text-gray-800 font-medium text-sm"
-                    onClick={() => handleMoveToCart(item)}
-                  >
-                    Move to Cart
-                  </Button>
+              <div className="pt-4">
+                <div className="flex flex-col sm:flex-row gap-2 mb-3">
+                  <Input
+                    placeholder="Enter coupon code"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
+                    className="flex-grow text-sm"
+                  />
                   <Button
                     variant="outline"
-                    className="w-full text-sm"
-                    onClick={() => setSavedItems(prev => prev.filter(i => i.id !== item.id))}
+                    className="border-orange-300 text-orange-700 hover:bg-orange-50 text-sm"
+                    onClick={() => {
+                      if (couponCode.trim()) {
+                        toast({
+                          title: "Coupon Applied",
+                          description: `Coupon "${couponCode}" applied successfully!`,
+                        });
+                      }
+                    }}
                   >
-                    Remove
+                    Apply
                   </Button>
                 </div>
+
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white py-5 md:py-6 text-base md:text-lg font-semibold"
+                >
+                  Proceed to Checkout
+                </Button>
+
+                <div className="mt-4 text-center">
+                  <Link href="/sure-findings/" className="text-orange-600 hover:text-orange-800 font-medium text-sm md:text-base">
+                    Continue Shopping
+                  </Link>
+                </div>
               </div>
-            ))}
-          </div>
+            </CardContent>
+          </Card>
         </div>
-      )}
+      </div>
     </div>
   );
 };
