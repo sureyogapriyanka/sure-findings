@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting...</title>
+  <script type="text/javascript">
+    // For SPA routing, redirect to index.html to let React Router handle the route
+    (function () {
+      var l = window.location;
+      var baseUrl = l.protocol + "//" + l.hostname + (l.port ? ":" + l.port : "");
+
+      // If we're already at the root, let React Router handle it
+      if (l.pathname === "/" || l.pathname === "/index.html") {
+        // Do nothing, let the app load normally
+        return;
+      }
+
+      // Otherwise, redirect to root to let React Router handle the route
+      window.location.replace(baseUrl + "/");
+    })();
+  </script>
+</head>
+
+<body>
+  <p>Redirecting to the correct page...</p>
+</body>
+
+</html>

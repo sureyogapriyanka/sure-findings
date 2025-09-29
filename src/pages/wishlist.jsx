@@ -3,7 +3,7 @@ import { Link } from 'wouter';
 import { Button } from '../components/ui/button.jsx';
 import { Card, CardContent, CardHeader } from '../components/ui/card.jsx';
 import api from '../services/api.js';
-import { getProducts } from '../lib/products.js';
+import { getAllProducts } from '../lib/products.js';
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -23,7 +23,7 @@ const Wishlist = () => {
         setDebugInfo(`Wishlist IDs: ${JSON.stringify(wishlistIds)}`);
 
         // Get all products
-        const allProducts = await getProducts();
+        const { products: allProducts } = await getAllProducts();
         setProducts(allProducts);
         setDebugInfo(prev => `${prev}\nAll products count: ${allProducts.length}`);
 
