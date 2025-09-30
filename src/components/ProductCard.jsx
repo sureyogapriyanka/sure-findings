@@ -25,7 +25,7 @@ const ProductCard = ({ product }) => {
             <p className="font-medium">{product.name}</p>
             <p className="text-sm mt-1">Quantity: 1</p>
             <p className="text-sm mt-1 text-green-600 font-medium">
-              {formatPrice(product.price)} added to cart
+              {formatPrice(product.price)}
             </p>
           </div>
         ),
@@ -57,7 +57,7 @@ const ProductCard = ({ product }) => {
             <p className="font-medium">{product.name}</p>
             <p className="text-sm mt-1">Preparing secure checkout...</p>
             <p className="text-sm mt-1 text-green-600 font-medium">
-              {formatPrice(product.price)} added to order
+              {formatPrice(product.price)}
             </p>
           </div>
         ),
@@ -67,7 +67,7 @@ const ProductCard = ({ product }) => {
 
       // Redirect to checkout page after a short delay
       setTimeout(() => {
-        navigate('/checkout');
+        navigate('/sure-findings/checkout');
       }, 1500);
     } catch (error) {
       toast({
@@ -159,7 +159,7 @@ const ProductCard = ({ product }) => {
     : 0;
 
   return (
-    <Link href={`/product/${product.id}`} className="block h-full">
+    <Link href={`/sure-findings/product/${product.id}`} className="block h-full">
       <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 group h-full flex flex-col">
         <div className="block">
           <div className="relative">

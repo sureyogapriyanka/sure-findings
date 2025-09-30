@@ -37,96 +37,97 @@ function Router() {
         <>
             <Header />
             <Switch base={basePath}>
-                <Route path="/" component={Index} />
-                <Route path="/login" component={Login} />
-                <Route path="/register" component={Register} />
-                <Route path="/auth" component={Auth} />
-                <Route path="/home">
+                <Route path="/sure-findings/" component={Login} />
+                <Route path="/su/login" component={Login} />
+                <Route path="/sure-findings/register" component={Register} />
+                <Route path="/sure-findings/auth" component={Auth} />
+                <Route path="/sure-findings/welcome" component={Index} />
+                <Route path="/sure-findings/home">
                     <ProtectedRoute>
                         <Home />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/products">
+                <Route path="/sure-findings/products">
                     <ProtectedRoute>
                         <ProductsPage />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/category/:categoryName">
+                <Route path="/sure-findings/category/:categoryName">
                     <ProtectedRoute>
                         <Category />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/product/:productId">
+                <Route path="/sure-findings/product/:productId">
                     <ProtectedRoute>
                         <Product />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/debug-product/:productId">
+                <Route path="/sure-findings/debug-product/:productId">
                     <ProtectedRoute>
                         <DebugProduct />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/cart">
+                <Route path="/sure-findings/cart">
                     <ProtectedRoute>
                         <Cart />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/checkout">
+                <Route path="/sure-findings/checkout">
                     <ProtectedRoute>
                         <Checkout />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/orders">
+                <Route path="/sure-findings/orders">
                     <ProtectedRoute>
                         <Orders />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/tracking">
+                <Route path="/sure-findings/tracking">
                     <ProtectedRoute>
                         <Tracking />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/profile">
+                <Route path="/sure-findings/profile">
                     <ProtectedRoute>
                         <Profile />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/wishlist">
+                <Route path="/sure-findings/wishlist">\r
                     <ProtectedRoute>
                         <Wishlist />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/search">
+                <Route path="/sure-findings/search">\r
                     <ProtectedRoute>
                         <Search />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/deals">
+                <Route path="/sure-findings/deals">\r\n
                     <ProtectedRoute>
                         <Deals />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/about">
+                <Route path="/sure-findings/about">\r\n
                     <ProtectedRoute>
                         <About />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/contact">
+                <Route path="/sure-findings/contact">\r\n
                     <ProtectedRoute>
                         <Contact />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/services">
+                <Route path="/sure-findings/services">\r\n
                     <ProtectedRoute>
                         <Services />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/faq">
+                <Route path="/sure-findings/faq">\r\n
                     <ProtectedRoute>
                         <FAQ />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/upi-test">
+                <Route path="/sure-findings/upi-test">\r\n
                     <ProtectedRoute>
                         <UpiTest />
                     </ProtectedRoute>

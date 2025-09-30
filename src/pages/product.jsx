@@ -187,7 +187,7 @@ const Product = () => {
           <h1 className="text-2xl font-bold mb-4">Error Loading Product</h1>
           <p className="text-red-500 mb-4">{error}</p>
           <p className="text-muted-foreground mb-4">Product ID: {productId || 'Not found'}</p>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button>Return Home</Button>
           </Link>
         </div>
@@ -201,7 +201,7 @@ const Product = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
           <p className="text-muted-foreground mb-4">Product ID: {productId || 'Not found'}</p>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button>Return Home</Button>
           </Link>
         </div>
@@ -225,9 +225,9 @@ const Product = () => {
     >
       {/* Breadcrumb */}
       <nav className="text-sm text-muted-foreground mb-4">
-        <Link href="/" className="hover:text-primary">Home</Link>
+        <Link href="/sure-findings/" className="hover:text-primary">Home</Link>
         <span className="mx-2">/</span>
-        <Link href={`/category/${product.category}`} className="hover:text-primary capitalize">
+        <Link href={`/sure-findings/category/${product.category}`} className="hover:text-primary capitalize">
           {product.category}
         </Link>
         <span className="mx-2">/</span>

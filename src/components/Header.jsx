@@ -79,7 +79,7 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(`/sure-findings/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setShowDropdown(false);
     }
   };
@@ -125,7 +125,7 @@ const Header = () => {
 
   const categories = CATEGORIES.map(cat => ({
     name: cat.name,
-    path: `/category/${cat.id}`
+    path: `/sure-findings/category/${cat.id}`
   }));
 
   return (
@@ -142,7 +142,7 @@ const Header = () => {
         <div className="flex items-center justify-between drop-shadow-lg">
           {/* Logo */}
           <div className="flex items-center space-x-4">
-            <Link href="/" className="text-xl md:text-2xl font-bold hover:text-[#e68a00] transition-colors flex items-center rounded-lg px-2 py-1 shadow-sm" data-testid="logo-home">
+            <Link href="/sure-findings/" className="text-xl md:text-2xl font-bold hover:text-[#e68a00] transition-colors flex items-center rounded-lg px-2 py-1 shadow-sm" data-testid="logo-home">
               <span className="text-white">Sure-Findings Store</span>
             </Link>
 
@@ -182,7 +182,7 @@ const Header = () => {
                             key={product.id}
                             className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer"
                             onMouseDown={() => {
-                              navigate(`/product/${product.id}`);
+                              navigate(`/sure-findings/product/${product.id}`);
                               setShowDropdown(false);
                             }}
                           >
@@ -197,7 +197,7 @@ const Header = () => {
                         <div
                           className="px-4 py-2 text-blue-600 hover:underline cursor-pointer text-sm border-t"
                           onMouseDown={() => {
-                            navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                            navigate(`/sure-findings/search?q=${encodeURIComponent(searchQuery.trim())}`);
                             setShowDropdown(false);
                           }}
                         >
@@ -240,28 +240,28 @@ const Header = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56 bg-white text-[#131A22]">
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" data-testid="menu-profile">Your Account</Link>
+                  <Link href="/sure-findings/profile" data-testid="menu-profile">Your Account</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/orders" data-testid="menu-orders">Your Orders</Link>
+                  <Link href="/sure-findings/orders" data-testid="menu-orders">Your Orders</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
+                  <Link href="/sure-findings/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/upi-test" data-testid="menu-upi-test">UPI Test</Link>
+                  <Link href="/sure-findings/upi-test" data-testid="menu-upi-test">UPI Test</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Orders */}
-            <Link href="/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="orders-link">
+            <Link href="/sure-findings/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="orders-link">
 
               <div className="font-medium text-sm">my Orders</div>
             </Link>
 
             {/* Cart */}
-            <Link href="/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="cart-link">
+            <Link href="/sure-findings/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all" data-testid="cart-link">
               <div className="relative">
                 <ShoppingCart className="h-6 w-6" />
                 <span className="absolute -top-2 -right-2 bg-[#e68a00] text-[#131A22] rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold shadow-md" data-testid="cart-count">
@@ -291,12 +291,12 @@ const Header = () => {
             <div className="flex flex-col space-y-4">
               {/* Mobile User Actions */}
               <div className="flex justify-between">
-                <Link href="/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
+                <Link href="/sure-findings/orders" className="cursor-pointer hover:text-[#e68a00] px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
 
                   <div className="font-medium text-sm">& Orders</div>
                 </Link>
 
-                <Link href="/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
+                <Link href="/sure-findings/cart" className="relative cursor-pointer hover:text-[#e68a00] flex items-center px-2 py-1 rounded-lg shadow-sm border border-[#333333] transition-all flex-1 text-center">
                   <div className="relative mx-auto">
                     <ShoppingCart className="h-6 w-6 mx-auto" />
                     <span className="absolute -top-2 -right-2 bg-[#e68a00] text-[#131A22] rounded-full text-xs w-5 h-5 flex items-center justify-center font-bold shadow-md" data-testid="cart-count">
@@ -320,16 +320,16 @@ const Header = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56 bg-white text-[#131A22]">
                     <DropdownMenuItem asChild>
-                      <Link href="/profile" data-testid="menu-profile">Your Account</Link>
+                      <Link href="/sure-findings/profile" data-testid="menu-profile">Your Account</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/orders" data-testid="menu-orders">Your Orders</Link>
+                      <Link href="/sure-findings/orders" data-testid="menu-orders">Your Orders</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
+                      <Link href="/sure-findings/wishlist" data-testid="menu-wishlist">Your Wish List</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href="/upi-test" data-testid="menu-upi-test">UPI Test</Link>
+                      <Link href="/sure-findings/upi-test" data-testid="menu-upi-test">UPI Test</Link>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

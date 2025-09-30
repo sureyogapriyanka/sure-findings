@@ -32,7 +32,7 @@ const Auth = () => {
 
     // If user is already logged in, redirect to home
     if (user) {
-        return <Redirect to="/home" />;
+        return <Redirect to="/sure-findings/home" />;
     }
 
     const handleChange = (e) => {
@@ -47,7 +47,7 @@ const Auth = () => {
     const handleLogin = async (credentials) => {
         try {
             await login(credentials);
-            navigate('/home');
+            navigate('/sure-findings/home');
         } catch (err) {
             setError(err.message || 'Login failed');
         }
@@ -59,7 +59,7 @@ const Auth = () => {
 
         try {
             await register(userData);
-            navigate('/home');
+            navigate('/sure-findings/home');
         } catch (err) {
             setError(err.message || 'Registration failed');
             setLoading(false);
@@ -209,7 +209,7 @@ const Auth = () => {
                     <div className="mt-4 text-center">
                         <button
                             type="button"
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/sure-findings/')}
                             className="text-[#131921] hover:text-[#febd69] text-sm transition-colors duration-300 flex items-center justify-center"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -46,7 +46,7 @@ const Category = () => {
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold mb-4">Category not found</h1>
           <p className="text-muted-foreground mb-4">URL: {location}, Category ID: {categoryId}</p>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button variant="outline">
               <ChevronLeft className="h-4 w-4 mr-2" />
               Back to Home
@@ -88,7 +88,7 @@ const Category = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl">
       <div className="mb-6">
-        <Link href="/" className="inline-flex items-center text-orange-600 hover:text-orange-800 mb-4">
+        <Link href="/sure-findings/" className="inline-flex items-center text-orange-600 hover:text-orange-800 mb-4">
           <ChevronLeft className="h-4 w-4 mr-1" />
           Back to Home
         </Link>
@@ -106,7 +106,7 @@ const Category = () => {
           <p className="text-muted-foreground mb-4">
             There are currently no products in this category. Check back later or contact us to suggest products for this category.
           </p>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700">
               Continue Shopping
             </Button>

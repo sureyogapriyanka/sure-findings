@@ -2,7 +2,7 @@ import { Link } from 'wouter';
 
 const CategoryBanner = ({ category }) => {
   return (
-    <Link href={`/category/${category.id}`} className="block h-full">
+    <Link href={`/sure-findings/category/${category.id}`} className="block h-full">
       <div className="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 h-full group border border-gray-200 overflow-hidden">
         <div className="aspect-square flex items-center justify-center bg-gray-50 p-4">
           <img
