@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, Redirect } from 'wouter';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/button.jsx';
@@ -17,8 +17,15 @@ const Login = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // If user is already logged in, redirect to home
-    if (user) {
+    // Redirect to home if user is already logged in
+    // But only after the component has mounted and we've checked auth state
+    const [authChecked, setAuthChecked] = useState(false);
+
+    useEffect(() => {
+        setAuthChecked(true);
+    }, []);
+
+    if (authChecked && user) {
         return <Redirect to="/sure-findings/home" />;
     }
 
@@ -77,6 +84,11 @@ const Login = () => {
             password: '231FA07046'
         }
     ];
+
+    // If still checking auth state, show loading
+    if (!authChecked) {
+        return <div className="min-h-screen flex items-center justify-center">Checking authentication...</div>;
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-[#131921] via-[#232f3e] to-[#febd69] flex items-center justify-center p-4">

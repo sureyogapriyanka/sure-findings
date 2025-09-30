@@ -12,6 +12,14 @@ const Index = () => {
         if (user) {
             navigate('/sure-findings/home');
         }
+
+        // Automatically redirect to login after 3 seconds
+        const timer = setTimeout(() => {
+            navigate('/sure-findings/login');
+        }, 3000);
+
+        // Clean up timer if component unmounts
+        return () => clearTimeout(timer);
     }, [user, navigate]);
 
     return (
@@ -57,6 +65,10 @@ const Index = () => {
                             Sign In to Your Account
                         </Button>
                     </Link>
+                </div>
+
+                <div className="mb-8">
+                    <p className="text-gray-300">Redirecting to login page automatically in 3 seconds...</p>
                 </div>
 
                 {/* Amazon-inspired features section */}

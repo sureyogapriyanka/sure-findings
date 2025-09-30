@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'wouter';
-import { Package, Truck, CheckCircle, Clock, Search, CreditCard, QrCode, Wallet, TruckIcon } from 'lucide-react';
+import { Package, Truck, CheckCircle, Clock, Search, CreditCard, QrCode, Wallet, TruckIcon, ChevronLeft } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { Button } from '../components/ui/button.jsx';
 import { Input } from '../components/ui/input.jsx';
@@ -31,13 +31,17 @@ const Orders = () => {
           setOrders(storedData.orders);
         } else {
           // Fallback to localStorage direct access
-          const orders = JSON.parse(localStorage.getItem('ecommerce_app_data') || '{}').orders || [];
+          const rawData = localStorage.getItem('ecommerce_app_data');
+          const parsedData = rawData ? JSON.parse(rawData) : {};
+          const orders = parsedData.orders || [];
           setOrders(orders);
         }
       } catch (error) {
         // Fallback to localStorage direct access
         try {
-          const orders = JSON.parse(localStorage.getItem('ecommerce_app_data') || '{}').orders || [];
+          const rawData = localStorage.getItem('ecommerce_app_data');
+          const parsedData = rawData ? JSON.parse(rawData) : {};
+          const orders = parsedData.orders || [];
           setOrders(orders);
         } catch (fallbackError) {
           setOrders([]);
@@ -68,9 +72,9 @@ const Orders = () => {
     // Filter by search query
     if (searchQuery) {
       ordersList = ordersList.filter(order =>
-        order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (order.id && order.id.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (order.items && order.items.some(item =>
-          item.name?.toLowerCase().includes(searchQuery.toLowerCase())
+          item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase())
         ))
       );
     }
@@ -107,42 +111,66 @@ const Orders = () => {
   })();
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR'
-    }).format(price);
+    // Handle case where price might be undefined or null
+    if (price === undefined || price === null) {
+      return '₹0.00';
+    }
+
+    // Handle case where price is not a number
+    if (isNaN(price)) {
+      return '₹0.00';
+    }
+
+    try {
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+      }).format(price);
+    } catch (error) {
+      return '₹0.00';
+    }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+    if (!dateString) return 'Unknown date';
+    try {
+      return new Date(dateString).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
   const formatDeliveryDate = (dateString) => {
-    const today = new Date();
-    const deliveryDate = new Date(dateString);
+    if (!dateString) return 'Delivery date not available';
+    try {
+      const today = new Date();
+      const deliveryDate = new Date(dateString);
 
-    // If delivery is today
-    if (deliveryDate.toDateString() === today.toDateString()) {
-      return 'Arriving today';
+      // If delivery is today
+      if (deliveryDate.toDateString() === today.toDateString()) {
+        return 'Arriving today';
+      }
+
+      // If delivery is tomorrow
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      if (deliveryDate.toDateString() === tomorrow.toDateString()) {
+        return 'Arriving tomorrow';
+      }
+
+      // Otherwise show the date
+      return `Arriving by ${formatDate(dateString)}`;
+    } catch (error) {
+      return 'Delivery date not available';
     }
-
-    // If delivery is tomorrow
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    if (deliveryDate.toDateString() === tomorrow.toDateString()) {
-      return 'Arriving tomorrow';
-    }
-
-    // Otherwise show the date
-    return `Arriving by ${formatDate(dateString)}`;
   };
 
   const getStatusColor = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status ? status.toLowerCase() : '') {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
       case 'processing':
@@ -157,7 +185,7 @@ const Orders = () => {
   };
 
   const getStatusIcon = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status ? status.toLowerCase() : '') {
       case 'pending':
         return <Clock className="h-4 w-4" />;
       case 'processing':
@@ -210,7 +238,7 @@ const Orders = () => {
             <Package className="h-8 w-8 text-orange-600" />
           </div>
           <h1 className="text-2xl font-bold mb-4 text-gray-800">Please sign in to view your orders</h1>
-          <Link href="/">
+          <Link href="/sure-findings/">
             <Button variant="outline" className="mb-6">
               <ChevronLeft className="h-4 w-4 mr-2" />
               Back to Home
@@ -308,7 +336,7 @@ const Orders = () => {
             You haven't placed any orders yet. Start shopping to see your orders here.
           </p>
           <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all" asChild>
-            <Link href="/">Start Shopping</Link>
+            <Link href="/sure-findings/">Start Shopping</Link>
           </Button>
         </div>
       ) : (
@@ -323,7 +351,7 @@ const Orders = () => {
                       <Badge variant="secondary" className={getStatusColor(order.status)}>
                         <span className="flex items-center">
                           {getStatusIcon(order.status)}
-                          <span className="ml-1 font-medium">{order.status}</span>
+                          <span className="ml-1 font-medium">{order.status || 'Unknown'}</span>
                         </span>
                       </Badge>
                     </div>
@@ -357,8 +385,8 @@ const Orders = () => {
                   <div className="lg:col-span-2">
                     <h4 className="font-bold text-lg text-gray-800 mb-3">Items</h4>
                     <div className="space-y-4">
-                      {order.items && order.items.map((item) => (
-                        <div key={item.id} className="flex items-center gap-4 p-3 rounded-xl border border-orange-100 hover:bg-orange-50 transition-colors">
+                      {order.items && order.items.map((item, index) => (
+                        <div key={item.id || index} className="flex items-center gap-4 p-3 rounded-xl border border-orange-100 hover:bg-orange-50 transition-colors">
                           <img
                             src={item.image || '/placeholder.jpg'}
                             alt={item.name}
@@ -368,13 +396,13 @@ const Orders = () => {
                             }}
                           />
                           <div className="flex-1">
-                            <h5 className="font-medium text-gray-900">{item.name}</h5>
+                            <h5 className="font-medium text-gray-900">{item.name || 'Unknown Item'}</h5>
                             <p className="text-sm text-gray-600 mt-1">
-                              Qty: {item.quantity} × {formatPrice(item.price)}
+                              Qty: {item.quantity || 0} × {formatPrice(item.price)}
                             </p>
                           </div>
                           <div className="font-bold text-gray-900">
-                            {formatPrice(item.quantity * item.price)}
+                            {item.quantity && item.price ? formatPrice(item.quantity * item.price) : 'N/A'}
                           </div>
                         </div>
                       ))}
@@ -384,12 +412,12 @@ const Orders = () => {
                     <h4 className="font-bold text-lg text-gray-800 mb-3">Shipping Address</h4>
                     <div className="bg-orange-50 rounded-xl p-4 border border-orange-100">
                       <p className="text-gray-700 whitespace-pre-line">
-                        {order.shippingAddress}
+                        {order.shippingAddress || 'No address provided'}
                       </p>
                     </div>
                     <div className="mt-4">
                       <Button variant="outline" className="w-full" asChild>
-                        <Link href={`/tracking?order=${order.id}`}>
+                        <Link href={`/sure-findings/tracking?order=${order.id}`}>
                           Track Package
                         </Link>
                       </Button>

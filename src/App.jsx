@@ -37,11 +37,10 @@ function Router() {
         <>
             <Header />
             <Switch base={basePath}>
-                <Route path="/sure-findings/" component={Login} />
-                <Route path="/su/login" component={Login} />
+                <Route path="/sure-findings/" component={Index} />
+                <Route path="/sure-findings/login" component={Login} />
                 <Route path="/sure-findings/register" component={Register} />
                 <Route path="/sure-findings/auth" component={Auth} />
-                <Route path="/sure-findings/welcome" component={Index} />
                 <Route path="/sure-findings/home">
                     <ProtectedRoute>
                         <Home />
@@ -92,42 +91,42 @@ function Router() {
                         <Profile />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/wishlist">\r
+                <Route path="/sure-findings/wishlist">
                     <ProtectedRoute>
                         <Wishlist />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/search">\r
+                <Route path="/sure-findings/search">
                     <ProtectedRoute>
                         <Search />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/deals">\r\n
+                <Route path="/sure-findings/deals">
                     <ProtectedRoute>
                         <Deals />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/about">\r\n
+                <Route path="/sure-findings/about">
                     <ProtectedRoute>
                         <About />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/contact">\r\n
+                <Route path="/sure-findings/contact">
                     <ProtectedRoute>
                         <Contact />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/services">\r\n
+                <Route path="/sure-findings/services">
                     <ProtectedRoute>
                         <Services />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/faq">\r\n
+                <Route path="/sure-findings/faq">
                     <ProtectedRoute>
                         <FAQ />
                     </ProtectedRoute>
                 </Route>
-                <Route path="/sure-findings/upi-test">\r\n
+                <Route path="/sure-findings/upi-test">
                     <ProtectedRoute>
                         <UpiTest />
                     </ProtectedRoute>
